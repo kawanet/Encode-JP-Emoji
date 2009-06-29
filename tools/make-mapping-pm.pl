@@ -11,16 +11,18 @@ my $INDENT = '    ';
 my $CP932_SRC = [qw(docomo kddi softbank)];
 my $UTF8_SRC  = [qw(docomo kddi softbank google unicode)];
 
-unless (@ARGV) {
+if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
     print STDERR "Usage:\n";
-    print STDERR "- to parse local data files:\n";
-    print STDERR "$0 datadir ../Unicode-Emoji-E4U/data/ > lib/Encode/JP/Emoji/Mapping.pm\n";
-    print STDERR "- to fetch data files from google code:\n";
-    print STDERR "$0 datadir http://emoji4unicode.googlecode.com/svn/trunk/data/ > lib/Encode/JP/Emoji/Mapping.pm\n";
-    exit 1;
+    print STDERR "* to parse local data files:\n";
+    print STDERR "$0 datadir ../Unicode-Emoji-E4U/trunk/data > lib/Encode/JP/Emoji/Mapping.pm\n";
+    print STDERR "* to fetch data files from google code (default):\n";
+    print STDERR "$0 datadir http://emoji4unicode.googlecode.com/svn/trunk/data > lib/Encode/JP/Emoji/Mapping.pm\n";
+    exit;
 }
 
-my $e4u = Unicode::Emoji::E4U->new(@ARGV);
+my %opt = @ARGV;
+$opt{verbose} = 1 unless exists $opt{verbose};
+my $e4u = Unicode::Emoji::E4U->new(%opt);
 
 sub make_mapping_pm {
     my $out  = [];
