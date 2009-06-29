@@ -9,7 +9,7 @@ use Unicode::Emoji::E4U;
 
 my $INDENT = '    ';
 my $CP932_SRC = [qw(docomo kddi softbank)];
-my $UTF8_SRC  = [qw(docomo kddi softbank google unicode)];
+my $UTF8_SRC  = [qw(docomo kddi softbank unicode)];
 
 if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
     print STDERR "Usage:\n";
@@ -91,7 +91,7 @@ sub make_converter {
     }
     foreach my $carrier (@$UTF8_SRC) {
         push @$out, &make_converter_sub('google', $carrier, 'unicode', 'google', 'unicode');
-        next if ($carrier eq 'google');
+#       next if ($carrier eq 'google');
         push @$out, &make_converter_sub('google', 'google', 'unicode', $carrier, 'unicode');
     }
 

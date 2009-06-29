@@ -10,18 +10,23 @@ my @sjis_encodings = qw(
     x-sjis-emoji-kddi-pp
     x-sjis-emoji-softbank-pp
     x-sjis-emoji-softbank2g-pp
+    x-sjis-emoji-softbank3g-pp
     x-sjis-e4u-docomo-pp
     x-sjis-e4u-kddi-pp
     x-sjis-e4u-softbank-pp
     x-sjis-e4u-softbank2g-pp
+    x-sjis-e4u-softbank3g-pp
+    x-sjis-e4u-none-pp
 );
 
 my @utf8_encodings = qw(
     x-utf8-e4u-docomo-pp
     x-utf8-e4u-kddi-pp
     x-utf8-e4u-softbank-pp
-    x-utf8-e4u-google-pp
+    x-utf8-e4u-softbank2g-pp
+    x-utf8-e4u-softbank3g-pp
     x-utf8-e4u-unicode-pp
+    x-utf8-e4u-none-pp
 );
 
 plan tests => 2 * (@sjis_encodings + @utf8_encodings);

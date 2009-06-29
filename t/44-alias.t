@@ -25,7 +25,6 @@ my @utf8_encodings = qw(
     x-utf8-e4u-softbank
     x-utf8-e4u-softbank2g
     x-utf8-e4u-softbank3g
-    x-utf8-e4u-google
     x-utf8-e4u-unicode
     x-utf8-e4u-none
 );

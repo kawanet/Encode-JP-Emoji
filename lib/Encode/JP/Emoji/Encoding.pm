@@ -137,11 +137,11 @@ __PACKAGE__->Define('x-utf8-e4u-softbank-pp');
 *after_decode  = \&Encode::JP::Emoji::Encoding::Util::softbankauto_unicode_to_google_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_softbank_unicode;
 
-package Encode::JP::Emoji::Encoding::X_UTF8_E4U_GOOGLE_PP;
-use base 'Encode::JP::Emoji::Encoding::UTF8';
-__PACKAGE__->Define('x-utf8-e4u-google-pp');
-*after_decode  = \&Encode::JP::Emoji::Mapping::google_unicode_to_google_unicode;
-*before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_google_unicode;
+# package Encode::JP::Emoji::Encoding::X_UTF8_E4U_GOOGLE_PP;
+# use base 'Encode::JP::Emoji::Encoding::UTF8';
+# __PACKAGE__->Define('x-utf8-e4u-google-pp');
+# *after_decode  = \&Encode::JP::Emoji::Mapping::google_unicode_to_google_unicode;
+# *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_google_unicode;
 
 package Encode::JP::Emoji::Encoding::X_UTF8_E4U_UNICODE_PP;
 use base 'Encode::JP::Emoji::Encoding::UTF8';
