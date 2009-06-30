@@ -27,6 +27,7 @@ t/41-fallback.t
 t/42-fallback-text.t
 t/43-fallback-html.t
 t/44-alias.t
+t/45-property.t
 t/70-synopsis-emoji.t
 t/71-synopsis-fallback.t
 t/docomo-table.tsv

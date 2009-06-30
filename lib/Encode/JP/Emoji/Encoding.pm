@@ -45,26 +45,28 @@ sub sub_check {
 sub decode {
     my ($self, $octets, $check) = @_;
     return undef unless defined $octets;
-    $octets .= '' if ref $octets; # stringify;
     $check ||=0;
     my $subcheck = $self->sub_check($check);
+    my $copy = $octets if $check and !($check & Encode::LEAVE_SRC());
+    $octets .= '' if ref $octets; # stringify;
     $self->before_decode($octets, $subcheck);
     my $string = $self->byte_encoding->decode($octets, $check);
     $self->after_decode($string, $subcheck);
-    $_[1] = $string if $check and !($check & Encode::LEAVE_SRC());
+    $_[1] = $copy if $check and !($check & Encode::LEAVE_SRC());
     $string;
 }
 
 sub encode {
     my ($self, $string, $check) = @_;
     return undef unless defined $string;
-    $string .= '' if ref $string; # stringify;
     $check ||=0;
     my $subcheck = $self->sub_check($check);
+    my $copy = $string if $check and !($check & Encode::LEAVE_SRC());
+    $string .= '' if ref $string; # stringify;
     $self->before_encode($string, $subcheck);
     my $octets = $self->byte_encoding->encode($string, $check);
     $self->after_encode($octets, $subcheck);
-    $_[1] = $octets if $check and !($check & Encode::LEAVE_SRC());
+    $_[1] = $copy if $check and !($check & Encode::LEAVE_SRC());
     $octets;
 }
 

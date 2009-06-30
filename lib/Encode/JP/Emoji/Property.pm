@@ -1,6 +1,6 @@
 =head1 NAME
 
-Encode::JP::Emoji::Property - Emoji named unicode character properties
+Encode::JP::Emoji::Property - Emoji named character properties
 
 =head1 SYNOPSIS
 
@@ -16,7 +16,7 @@ Encode::JP::Emoji::Property - Emoji named unicode character properties
 
 =head1 DESCRIPTION
 
-This exports the following named unicode character properties:
+This exports the following named character properties:
 
 =head2 \p{InEmojiDocomoUnicode}
 
