@@ -4,11 +4,74 @@ Encode::JP::Emoji - Emoji encodings and cross-mapping tables in pure Perl
 
 =head1 SYNOPSIS
 
-will be described later.
+    use Encode;
+    use Encode::JP::Emoji;
 
-=head1 METHODS
+    # DoCoMo Shift_JIS <SJIS+F89F> octets to DoCoMo UTF-8 <U+E63E> octets
+    my $sun = "\xF8\x9F";
+    Encode::from_to($sun, 'x-sjis-emoji-docomo', 'utf8');
 
-will be described later.
+    # KDDI Shift_JIS <SJIS+F7F5> octets to SoftBank Shift_JIS <SJIS+F747> octets
+    my $scream = "\xF7\xF5";
+    Encode::from_to($scream, 'x-sjis-e4u-kddi', 'x-sjis-e4u-softbank');
+
+    # DoCoMo UTF-8 <U+E6E2> octets to Google UTF-8 <U+FE82E> octets
+    my $keycap1 = "\xEE\x9B\xA2";
+    Encode::from_to($keycap1, 'x-utf8-e4u-docomo', 'utf8');
+
+    # Google UTF-8 <U+FE001> string to KDDI Shift_JIS <SJIS+F7C5> octets
+    my $newmoon = "\x{FE011}";
+    my $kddi = Encode::encode('x-sjis-e4u-kddi', $newmoon);
+
+    # SoftBank Shift_JIS <SJIS+F750> octets to SoftBank UTF-8 <U+E110> string
+    my $clover = "\xF7\x50";
+    my $softbank = Encode::decode('x-sjis-emoji-softbank', $clover);
+
+=head1 DESCRIPTION
+
+This module provides encodings which support emoji picture characters.
+
+The first group of encodings is for decoding from Shift_JIS (CP932) octets 
+to carriers' private code points UTF-8 string and vice versa.
+
+    Canonical                   Encoding    Octets Emoji    String Emoji
+    --------------------------------------------------------------------
+    x-sjis-emoji-docomo         Shift_JIS   DoCoMo          DoCoMo
+    x-sjis-emoji-kddi           Shift_JIS   KDDI            KDDI
+    x-sjis-emoji-softbank       Shift_JIS   SoftBank 2G/3G  SoftBank
+    x-sjis-emoji-softbank2g     Shift_JIS   SoftBank 2G     SoftBank
+    x-sjis-emoji-softbank3g     Shift_JIS   SoftBank 3G     SoftBank
+    --------------------------------------------------------------------
+
+The other group is for decoding from Shift_JIS (CP932) octets 
+to Googles's private code points UTF-8 string and vice versa.
+
+    Canonical                   Encoding    Octets Emoji    String Emoji
+    --------------------------------------------------------------------
+    x-sjis-e4u-docomo           Shift_JIS   DoCoMo          Google
+    x-sjis-e4u-kddi             Shift_JIS   KDDI            Google
+    x-sjis-e4u-softbank         Shift_JIS   SoftBank 2G/3G  Google
+    x-sjis-e4u-softbank2g       Shift_JIS   SoftBank 2G     Google
+    x-sjis-e4u-softbank3g       Shift_JIS   SoftBank 3G     Google
+    x-sjis-e4u-none             Shift_JIS   (No Emoji)      Google
+    x-utf8-e4u-docomo           UTF-8       DoCoMo          Google
+    x-utf8-e4u-kddi             UTF-8       KDDI            Google
+    x-utf8-e4u-softbank         UTF-8       SoftBank 2G/3G  Google
+    x-utf8-e4u-softbank2g       UTF-8       SoftBank 2G     Google
+    x-utf8-e4u-softbank3g       UTF-8       SoftBank 3G     Google
+    x-utf8-e4u-unicode          UTF-8       Unicode Std.    Google
+    x-utf8-e4u-none             UTF-8       (No Emoji)      (Any PUA)
+    --------------------------------------------------------------------
+
+The cross-carriers mapping table of this module is based on emoji4unicode, 
+Emoji for Unicode, project on Google Code.
+See more detail of the project on L<http://code.google.com/p/emoji4unicode/>.
+
+=head1 DEPENDENCIES
+
+This module requires Perl version 5.8.1 or later.
+
+L<Unicode::Emoji::E4U> is not required on run time.
 
 =head1 LINKS
 
@@ -46,7 +109,7 @@ Yusuke Kawasaki, L<http://www.kawa.net/>
 
 =head1 SEE ALSO
 
-L<Unicode::Emoji::E4U>
+L<Encode> and L<Unicode::Emoji::E4U>
 
 =head1 COPYRIGHT
 
@@ -59,6 +122,6 @@ use strict;
 use warnings;
 use Encode::JP::Emoji::PP;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 1;

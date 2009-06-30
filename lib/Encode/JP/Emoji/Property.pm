@@ -12,6 +12,7 @@ Encode::JP::Emoji::Property - Emoji named unicode character properties
     /\p{InEmojiSoftbankUnicode}/;
     /\p{InEmojiUnicodeUnicode}/;
     /\p{InEmojiGoogleUnicode}/;
+    /\p{InEmojiAnyUnicode}/;
 
 =head1 DESCRIPTION
 
@@ -19,23 +20,27 @@ This exports the following named unicode character properties:
 
 =head2 \p{InEmojiDocomoUnicode}
 
-This matches emoji codepoints in Unicode PUA defined by NTT DoCoMo: U+E63E ... U+E757.
+This matches DoCoMo's private emoji code points: C<U+E63E> ... C<U+E757>.
 
 =head2 \p{InEmojiKddiUnicode}
 
-This matches emoji codepoints in Unicode PUA defined by KDDI: U+E468 ... U+EB8E.
+This matches KDDI's private emoji code points: C<U+E468> ... C<U+EB8E>.
 
 =head2 \p{InEmojiSoftbankUnicode}
 
-This matches emoji codepoints in Unicode PUA defined by SoftBank Mobile: U+E001 ... U+E53E.
+This matches SoftBank's private emoji code points: C<U+E001> ... C<U+E53E>.
 
 =head2 \p{InEmojiGoogleUnicode}
 
-This matches emoji codepoints in Unicode PUA defined by Google: U+FE000 ... U+FEEA0.
+This matches Google's private emoji code points: C<U+FE000> ... C<U+FEEA0>.
 
 =head2 \p{InEmojiUnicodeUnicode}
 
-This matches emoji codepoints which will be defined in Unicode standard.
+This matches emoji code points which will be defined in the Unicode Standard.
+
+=head2 \p{InEmojiAnyUnicode}
+
+This matches any emoji code points above.
 
 =head1 AUTHOR
 
@@ -57,12 +62,15 @@ use warnings;
 use Encode::JP::Emoji::Mapping;
 use base 'Exporter';
 
+our $VERSION = '0.02';
+
 our @EXPORT = qw(
     InEmojiDocomoUnicode
     InEmojiKddiUnicode
     InEmojiSoftbankUnicode
     InEmojiUnicodeUnicode
     InEmojiGoogleUnicode
+    InEmojiAnyUnicode
 );
 
 *InEmojiDocomoUnicode   = \&Encode::JP::Emoji::Mapping::InEmojiDocomoUnicode;
@@ -70,5 +78,13 @@ our @EXPORT = qw(
 *InEmojiSoftbankUnicode = \&Encode::JP::Emoji::Mapping::InEmojiSoftbankUnicode;
 *InEmojiUnicodeUnicode  = \&Encode::JP::Emoji::Mapping::InEmojiUnicodeUnicode;
 *InEmojiGoogleUnicode   = \&Encode::JP::Emoji::Mapping::InEmojiGoogleUnicode;
+
+sub InEmojiAnyUnicode { return <<"EOT"; }
++Encode::JP::Emoji::Property::InEmojiDocomoUnicode
++Encode::JP::Emoji::Property::InEmojiKddiUnicode
++Encode::JP::Emoji::Property::InEmojiSoftbankUnicode
++Encode::JP::Emoji::Property::InEmojiUnicodeUnicode
++Encode::JP::Emoji::Property::InEmojiGoogleUnicode
+EOT
 
 1;

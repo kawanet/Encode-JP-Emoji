@@ -2,13 +2,10 @@
 
 Encode::JP::Emoji::Encoding - Emoji encodings
 
-=head1 SYNOPSIS
-
-will be described later.
-
 =head1 DESCRIPTION
 
-will be described later.
+This module implements all encodings provided by the package.
+Use L<Encode::JP::Emoji> instead of loading this module directly.
 
 =head1 AUTHOR
 
@@ -32,6 +29,8 @@ use base qw(Encode::Encoding);
 use Encode::JP::Emoji::Mapping;
 use Carp ();
 use Encode ();
+
+our $VERSION = '0.02';
 
 my $ascii_encoding = Encode::find_encoding('us-ascii');
 sub sub_check {
@@ -217,15 +216,15 @@ package Encode::JP::Emoji::Encoding::X_UTF8_E4U_NONE_PP;
 use base 'Encode::JP::Emoji::Encoding::UTF8';
 __PACKAGE__->Define('x-utf8-e4u-none-pp');
 
-*after_decode  = \&Encode::JP::Emoji::Encoding::Util::no_pua;
-*before_encode = \&Encode::JP::Emoji::Encoding::Util::no_pua;
+*after_decode  = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
+*before_encode = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
 
 package Encode::JP::Emoji::Encoding::X_SJIS_E4U_NONE_PP;
 use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
 __PACKAGE__->Define('x-sjis-e4u-none-pp');
 
-*after_decode  = \&Encode::JP::Emoji::Encoding::Util::no_pua;
-*before_encode = \&Encode::JP::Emoji::Encoding::Util::no_pua;
+*after_decode  = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
+*before_encode = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
 
 # Utils
 
@@ -321,10 +320,11 @@ sub unescape_vodafone {
     join "\x0F" => @$buf;
 }
 
-sub no_pua {
+
+sub no_emoji {
     my $check = $_[2] || sub {};
     $_[1] =~ s{
-        (\p{PrivateUse})
+        (\p{InEmojiAnyUnicode})
     }{
         &$check(ord $1);
     }egomx;

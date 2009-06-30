@@ -4,31 +4,80 @@ Encode::JP::Emoji::Fallback - Emoji fallback functions
 
 =head1 SYNOPSIS
 
-will be described later.
+    use Encode;
+    use Encode::JP::Emoji;
+    use Encode::JP::Emoji::Fallback;
+
+    # DoCoMo Shift_JIS <SJIS+F89F> octets to DoCoMo fallback text "晴れ"
+    my $sun = "\xF8\x9F";
+    Encode::from_to($sun, 'x-sjis-emoji-docomo', 'x-sjis-e4u-none', FB_DOCOMO_TEXT());
+
+    # KDDI UTF-8 <U+E598> octets to KDDI fallback text "霧"
+    my $fog = "\xEE\x96\x98";
+    Encode::from_to($fog, 'x-utf8-e4u-kddi', 'x-utf8-e4u-none', FB_GOOGLE_TEXT());
+
+    # SoftBank UTF-8 <U+E524> string to Google fallback text "ハムスター" on encoding
+    my $hamster = "\x{E524}";
+    my $softbank = Encode::encode('x-sjis-e4u-none', $hamster, FB_SOFTBANK_TEXT());
+
+    # Google UTF-8 <U+FE1C1> octets to Google fallback text "クマ" on decoding
+    my $bear = "\xF3\xBE\x87\x81";
+    my $google = Encode::decode('x-utf8-e4u-none', $bear, FB_GOOGLE_TEXT());
 
 =head1 DESCRIPTION
 
-This exports the following named unicode character properties:
+This module exports the following fallback functions which are used with
+C<x-sjis-e4u-none> and C<x-utf8-e4u-none> encodings which rejects any emojis.
 
-=head2 FB_DOCOMO_TEXT
+=head2 FB_DOCOMO_TEXT()
 
-=head2 FB_KDDI_TEXT
+This returns emoji name defined by DoCoMo.
+Note that this works only for DoCoMo's private emoji code points: U+E63E ... U+E757.
 
-=head2 FB_SOFTBANK_TEXT
+=head2 FB_KDDI_TEXT()
 
-=head2 FB_GOOGLE_TEXT
+This returns emoji name defined by KDDI.
+Note that this works only for KDDI's private emoji code points: U+E468 ... U+EB8E.
 
-=head2 FB_UNICODE_TEXT
+=head2 FB_SOFTBANK_TEXT()
 
-=head2 FB_DOCOMO_HTML
+This returns emoji name defined by SoftBank.
+Note that this works only for SoftBank's private emoji code points: U+E001 ... U+E53E.
 
-=head2 FB_KDDI_HTML
+=head2 FB_GOOGLE_TEXT()
 
-=head2 FB_SOFTBANK_HTML
+This returns emoji name defined by emoji4unicode project on Google Code.
+Note that this works only for Google's private emoji code points: U+FE000 ... U+FEEA0.
 
-=head2 FB_GOOGLE_HTML
+=head2 FB_UNICODE_TEXT()
 
-=head2 FB_UNICODE_HTML
+This will return character name defined on the Unicode Standard.
+Note that this works only for emojis which has a standard code point.
+
+=head2 FB_DOCOMO_HTML($format)
+
+These return HTML string which has an C<img> element instead of emoji name.
+You need to specify formatting string for C<sprintf()>.
+Note that this works only for DoCoMo's private emoji code points
+but provides Google's private code point for C<sprintf()>'s first argument.
+
+=head2 FB_KDDI_HTML($format)
+
+This works only for KDDI's private emoji code points
+but provides Google's private code point for C<sprintf()>.
+
+=head2 FB_SOFTBANK_HTML($format)
+
+This works only for SoftBank's private emoji code points
+but provides Google's private code point for C<sprintf()>.
+
+=head2 FB_GOOGLE_HTML($format)
+
+This works only for Google's private emoji code points.
+
+=head2 FB_UNICODE_HTML($format)
+
+This works only for emojis which has a standard code point.
 
 =head1 AUTHOR
 
@@ -48,6 +97,8 @@ package Encode::JP::Emoji::Fallback;
 use strict;
 use warnings;
 use base 'Exporter';
+
+our $VERSION = '0.02';
 
 our @EXPORT = qw(
     FB_DOCOMO_TEXT FB_KDDI_TEXT FB_SOFTBANK_TEXT FB_GOOGLE_TEXT FB_UNICODE_TEXT
