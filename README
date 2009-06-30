@@ -1,0 +1,45 @@
+NAME
+    Encode::JP::Emoji - Emoji encodings and cross-mapping tables in pure
+    Perl
+
+SYNOPSIS
+    will be described later.
+
+METHODS
+    will be described later.
+
+LINKS
+    *   Subversion Trunk
+
+        <http://emoji4unicode-ll.googlecode.com/svn/trunk/lang/perl/Encode-J
+        P-Emoji/trunk/>
+
+    *   Project Hosting on Google Code
+
+        <http://code.google.com/p/emoji4unicode-ll/>
+
+    *   Google Groups
+
+        <http://groups.google.com/group/emoji4unicode-ll>
+
+    *   RT: CPAN's request tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Encode-JP-Emoji>
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/Encode-JP-Emoji>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/Encode-JP-Emoji/>
+
+AUTHOR
+    Yusuke Kawasaki, <http://www.kawa.net/>
+
+SEE ALSO
+    Unicode::Emoji::E4U
+
+COPYRIGHT
+    Copyright 2009 Yusuke Kawasaki, all rights reserved.
+
