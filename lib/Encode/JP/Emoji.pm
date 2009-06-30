@@ -85,7 +85,7 @@ L<http://emoji4unicode-ll.googlecode.com/svn/trunk/lang/perl/Encode-JP-Emoji/tru
 
 L<http://code.google.com/p/emoji4unicode-ll/>
 
-=item * Google Groups
+=item * Google Groups and some Japanese documents
 
 L<http://groups.google.com/group/emoji4unicode-ll>
 

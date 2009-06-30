@@ -1,3 +1,5 @@
+=encoding utf-8
+
 =head1 NAME
 
 Encode::JP::Emoji::Fallback - Emoji fallback functions
@@ -8,19 +10,19 @@ Encode::JP::Emoji::Fallback - Emoji fallback functions
     use Encode::JP::Emoji;
     use Encode::JP::Emoji::Fallback;
 
-    # DoCoMo Shift_JIS <SJIS+F89F> octets to DoCoMo fallback text "ê∞ÇÍ"
+    # DoCoMo Shift_JIS <SJIS+F89F> octets to DoCoMo fallback text "Êô¥„Çå"
     my $sun = "\xF8\x9F";
     Encode::from_to($sun, 'x-sjis-emoji-docomo', 'x-sjis-e4u-none', FB_DOCOMO_TEXT());
 
-    # KDDI UTF-8 <U+E598> octets to KDDI fallback text "ñ∂"
+    # KDDI UTF-8 <U+E598> octets to Google fallback text "Èúß"
     my $fog = "\xEE\x96\x98";
     Encode::from_to($fog, 'x-utf8-e4u-kddi', 'x-utf8-e4u-none', FB_GOOGLE_TEXT());
 
-    # SoftBank UTF-8 <U+E524> string to Google fallback text "ÉnÉÄÉXÉ^Å[" on encoding
+    # SoftBank UTF-8 <U+E524> string to SoftBank fallback text "„Éè„É†„Çπ„Çø„Éº" on encoding
     my $hamster = "\x{E524}";
     my $softbank = Encode::encode('x-sjis-e4u-none', $hamster, FB_SOFTBANK_TEXT());
 
-    # Google UTF-8 <U+FE1C1> octets to Google fallback text "ÉNÉ}" on decoding
+    # Google UTF-8 <U+FE1C1> octets to Google fallback text "„ÇØ„Éû" on decoding
     my $bear = "\xF3\xBE\x87\x81";
     my $google = Encode::decode('x-utf8-e4u-none', $bear, FB_GOOGLE_TEXT());
 

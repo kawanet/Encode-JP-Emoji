@@ -1,4 +1,10 @@
 ---
+
+Encode-JP-Emoji-0.02 (2009-07-01):
+  - Some pods and tests added
+  - Japanese documents on Google Code.
+    http://groups.google.com/group/emoji4unicode-ll/web
+
 Encode-JP-Emoji-0.01 (2009-06-30):
   - first release
   - http://emoji4unicode-ll.googlecode.com/svn/trunk/lang/perl/Encode-JP-Emoji/trunk/
