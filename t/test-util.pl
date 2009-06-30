@@ -4,7 +4,7 @@ use 5.008_001;
 use Encode;
 
 sub shex {
-    join '' => map {sprintf('\x{%04X}',$_)} unpack('W*', $_[0]);
+    join '' => map {sprintf('\x{%04X}',ord)} split //, $_[0];
 }
 
 sub ohex {
