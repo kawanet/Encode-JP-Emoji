@@ -1,3 +1,21 @@
+=head1 NAME
+
+Encode::JP::Emoji::Mapping - Emoji mappings
+
+=head1 SYNOPSIS
+
+    $ perl tools/make-mapping-pm.pl > lib/Encode/JP/Emoji/Mapping.pm
+
+=head1 DESCRIPTION
+
+B<DO NOT> edit this file but generate it as above.
+
+=head1 SEE ALSO
+
+L<Encode::JP::Emoji>
+
+=cut
+
 package Encode::JP::Emoji::Mapping;
 use strict;
 use warnings;
@@ -179,10 +197,6 @@ sub google_unicode_to_softbank_unicode {
     }{
         $map_google_unicode_to_softbank_unicode{$1} || &$check(ord $1)
     }egomx;
-}
-
-sub google_unicode_to_google_unicode {
-    # through
 }
 
 our %map_unicode_unicode_to_google_unicode = (

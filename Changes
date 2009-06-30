@@ -1,5 +1,4 @@
 ---
-Encode-JP-Emoji-0.01:
-  - first commit
-  - http://emoji4unicode-ll.googlecode.com/svn/trunk/lang/perl/Encode-JP-Emoji/
-  - 2009-06-30
+Encode-JP-Emoji-0.01 (2009-06-30):
+  - first release
+  - http://emoji4unicode-ll.googlecode.com/svn/trunk/lang/perl/Encode-JP-Emoji/trunk/

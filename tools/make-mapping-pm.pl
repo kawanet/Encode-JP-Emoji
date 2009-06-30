@@ -9,7 +9,7 @@ use Unicode::Emoji::E4U;
 
 my $INDENT = '    ';
 my $CP932_SRC = [qw(docomo kddi softbank)];
-my $UTF8_SRC  = [qw(docomo kddi softbank unicode)];
+my $UTF8_SRC  = [qw(docomo kddi softbank google unicode)];
 
 if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
     print STDERR "Usage:\n";
@@ -24,13 +24,14 @@ my %opt = @ARGV;
 $opt{verbose} = 1 unless exists $opt{verbose};
 my $e4u = Unicode::Emoji::E4U->new(%opt);
 
+sub main {
+    print encode utf8 => &make_mapping_pm;
+}
+
 sub make_mapping_pm {
     my $out  = [];
 
-    push @$out, "package Encode::JP::Emoji::Mapping;\n";
-    push @$out, "use strict;\n";
-    push @$out, "use warnings;\n";
-    push @$out, "use utf8;\n";
+    push @$out, <DATA>;
     push @$out, "\n";
     push @$out, &make_property;
     push @$out, &make_converter;
@@ -38,18 +39,6 @@ sub make_mapping_pm {
     push @$out, "1;\n";
 
     join '' => @$out;
-}
-
-sub join_escape_pua {
-    my $text = join '' => @_;
-    $text =~ s/(\p{PrivateUse})/sprintf("\\x{%04X}",ord($1))/ge;
-    $text;
-}
-
-sub join_escape_nonascii {
-    my $text = join '' => @_;
-    $text =~ s/([^\x00-\x7e])/sprintf("\\x{%04X}",ord($1))/ge;
-    $text;
 }
 
 sub make_charnames {
@@ -60,6 +49,7 @@ sub make_charnames {
         push @$out, &make_charnames_var($basemap, $carrier);
     }
 
+    print STDERR (scalar @$out), " charnames\n";
     @$out;
 }
 
@@ -75,6 +65,7 @@ sub make_property {
         push @$out, &make_property_sub($basemap, $carrier, 'Unicode');
     }
 
+    print STDERR (scalar @$out), " properties\n";
     @$out;
 }
 
@@ -90,11 +81,12 @@ sub make_converter {
         push @$out, &make_converter_sub('google', 'google', 'unicode', $carrier, 'cp932');
     }
     foreach my $carrier (@$UTF8_SRC) {
+        next if ($carrier eq 'google');     # skip google to google converter
         push @$out, &make_converter_sub('google', $carrier, 'unicode', 'google', 'unicode');
-#       next if ($carrier eq 'google');
         push @$out, &make_converter_sub('google', 'google', 'unicode', $carrier, 'unicode');
     }
 
+    print STDERR (scalar @$out), " converters\n";
     @$out;
 }
 
@@ -111,7 +103,7 @@ sub make_property_sub {
     $list = [grep {defined $_->$srcx} @$list];
     $list = [grep {defined $_->$srcx->$srcs} @$list];
     $list = [grep {! $_->$srcx->is_alt} @$list];
-    
+
     # single char or more chars
     my $longlist = [grep {length $_->$srcx->$srcs > 1} @$list];
     $list = [grep {length $_->$srcx->$srcs == 1} @$list];
@@ -299,21 +291,21 @@ sub _find_name_ja {
     my $egoogle = $e4u->google->find(@_) or return;
     my $text    = $egoogle->text_fallback;
     return $text if $text;
-    
+
     my $docomo = $egoogle->docomo;
     if ($docomo && ! $egoogle->docomo_emoji->is_alt) {
         my $edocomo = $e4u->docomo->find(unicode => $docomo);
         $text = $edocomo->name_ja if $edocomo;
         return $text if $text;
     }
-    
+
     my $kddi = $egoogle->kddi;
     if ($kddi && ! $egoogle->kddi_emoji->is_alt) {
         my $ekddi = $e4u->kddi->find(unicode => $kddi);
         $text = $ekddi->name_ja if $ekddi;
         return $text if $text;
     }
-    
+
     my $softbank = $egoogle->softbank;
     if ($softbank && ! $egoogle->softbank_emoji->is_alt) {
         my $esoftbank = $e4u->softbank->find(unicode => $softbank);
@@ -322,8 +314,40 @@ sub _find_name_ja {
     }
 }
 
-sub main {
-    print encode utf8 => &make_mapping_pm;
+sub join_escape_pua {
+    my $text = join '' => @_;
+    $text =~ s/(\p{PrivateUse})/sprintf("\\x{%04X}",ord($1))/ge;
+    $text;
+}
+
+sub join_escape_nonascii {
+    my $text = join '' => @_;
+    $text =~ s/([^\x00-\x7e])/sprintf("\\x{%04X}",ord($1))/ge;
+    $text;
 }
 
 &main();
+
+__DATA__
+=head1 NAME
+
+Encode::JP::Emoji::Mapping - Emoji mappings
+
+=head1 SYNOPSIS
+
+    $ perl tools/make-mapping-pm.pl > lib/Encode/JP/Emoji/Mapping.pm
+
+=head1 DESCRIPTION
+
+B<DO NOT> edit this file but generate it as above.
+
+=head1 SEE ALSO
+
+L<Encode::JP::Emoji>
+
+=cut
+
+package Encode::JP::Emoji::Mapping;
+use strict;
+use warnings;
+use utf8;

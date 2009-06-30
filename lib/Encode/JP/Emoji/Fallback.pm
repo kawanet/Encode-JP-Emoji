@@ -1,3 +1,49 @@
+=head1 NAME
+
+Encode::JP::Emoji::Fallback - Emoji fallback functions
+
+=head1 SYNOPSIS
+
+will be described later.
+
+=head1 DESCRIPTION
+
+This exports the following named unicode character properties:
+
+=head2 FB_DOCOMO_TEXT
+
+=head2 FB_KDDI_TEXT
+
+=head2 FB_SOFTBANK_TEXT
+
+=head2 FB_GOOGLE_TEXT
+
+=head2 FB_UNICODE_TEXT
+
+=head2 FB_DOCOMO_HTML
+
+=head2 FB_KDDI_HTML
+
+=head2 FB_SOFTBANK_HTML
+
+=head2 FB_GOOGLE_HTML
+
+=head2 FB_UNICODE_HTML
+
+=head1 AUTHOR
+
+Yusuke Kawasaki, L<http://www.kawa.net/>
+
+=head1 SEE ALSO
+
+L<Encode::JP::Emoji>
+
+=head1 COPYRIGHT
+
+Copyright 2009 Yusuke Kawasaki, all rights reserved.
+
+=cut
+
 package Encode::JP::Emoji::Fallback;
 use strict;
 use warnings;

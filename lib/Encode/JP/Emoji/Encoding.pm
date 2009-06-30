@@ -1,3 +1,29 @@
+=head1 NAME
+
+Encode::JP::Emoji::Encoding - Emoji encodings
+
+=head1 SYNOPSIS
+
+will be described later.
+
+=head1 DESCRIPTION
+
+will be described later.
+
+=head1 AUTHOR
+
+Yusuke Kawasaki, L<http://www.kawa.net/>
+
+=head1 SEE ALSO
+
+L<Encode::JP::Emoji>
+
+=head1 COPYRIGHT
+
+Copyright 2009 Yusuke Kawasaki, all rights reserved.
+
+=cut
+
 use strict;
 use warnings;
 
@@ -36,13 +62,9 @@ sub encode {
     $string .= '' if ref $string; # stringify;
     $check ||=0;
     my $subcheck = $self->sub_check($check);
-#   print "1 [$string]\n";
     $self->before_encode($string, $subcheck);
-#   print "2 [$string]\n";
     my $octets = $self->byte_encoding->encode($string, $check);
-#   print "3 [$string] [$octets]\n";
     $self->after_encode($octets, $subcheck);
-#   print "4 [$string] [$octets]\n";
     $_[1] = $octets if $check and !($check & Encode::LEAVE_SRC());
     $octets;
 }
@@ -208,6 +230,7 @@ __PACKAGE__->Define('x-sjis-e4u-none-pp');
 # Utils
 
 package Encode::JP::Emoji::Encoding::Util;
+use Encode::JP::Emoji::Property;
 
 sub softbank_escape_to_softbank_unicode {
     my $check = $_[2] || sub {''};
@@ -249,7 +272,7 @@ sub softbankauto_unicode_to_google_unicode {
 sub softbank_unicode_to_softbank_escape {
     my $check = $_[2] || sub {''};
     $_[1] =~ s{
-        (\p{Encode::JP::Emoji::Mapping::InEmojiSoftbankUnicode}+)
+        (\p{InEmojiSoftbankUnicode}+)
     }{
         &unescape_vodafone($1)
     }egomx;
