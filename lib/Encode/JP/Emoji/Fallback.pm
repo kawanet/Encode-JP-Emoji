@@ -28,7 +28,7 @@ Encode::JP::Emoji::Fallback - Emoji fallback functions
 
 =head1 DESCRIPTION
 
-This module exports the following fallback functions which are used with
+This module exports the following fallback functions which would be used with
 C<x-sjis-e4u-none> and C<x-utf8-e4u-none> encodings which rejects any emojis.
 
 =head2 FB_DOCOMO_TEXT()

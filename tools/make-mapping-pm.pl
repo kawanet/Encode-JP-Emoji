@@ -96,7 +96,7 @@ sub make_property_sub {
     my $suffix  = shift;
 
     my $srcx = $srccarr.'_emoji';
-    my $srcs = 'unicode_string';
+    my $srcs = (lc $suffix).'_string';
     my $list = $e4u->$basemap->list;
 
     # source exists
@@ -112,9 +112,9 @@ sub make_property_sub {
     $list = [sort {$a->$srcx->$srcs cmp $b->$srcx->$srcs} @$list];
 
     my $out = [];
-    my $invar  = sprintf 'InEmoji%s%s' => ucfirst $srccarr, $suffix;
+    my $invar = sprintf 'InEmoji%s%s' => ucfirst $srccarr, $suffix;
     my $insub = sprintf 'InEmoji%s%s' => ucfirst $srccarr, $suffix;
-    my $revar  = sprintf 'ReEmoji%s%s' => ucfirst $srccarr, $suffix;
+    my $revar = sprintf 'ReEmoji%s%s' => ucfirst $srccarr, $suffix;
 
     # in
     {
