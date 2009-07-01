@@ -54,32 +54,28 @@ Note that this works only for Google's private emoji code points: U+FE000 ... U+
 =head2 FB_UNICODE_TEXT()
 
 This will return character name defined on the Unicode Standard.
-Note that this works only for emojis which has a standard code point.
+Note that this works only for emojis of standard code points.
 
-=head2 FB_DOCOMO_HTML($format)
+=head2 FB_DOCOMO_HTML()
 
-These return HTML string which has an C<img> element instead of emoji name.
-You need to specify formatting string for C<sprintf()>.
-Note that this works only for DoCoMo's private emoji code points
-but provides Google's private code point for C<sprintf()>'s first argument.
+These return a HTML element of C<img> instead of emoji name.
+Note that this would work mostly for emojis by DoCoMo.
 
-=head2 FB_KDDI_HTML($format)
+=head2 FB_KDDI_HTML()
 
-This works only for KDDI's private emoji code points
-but provides Google's private code point for C<sprintf()>.
+For emojis by KDDI.
 
-=head2 FB_SOFTBANK_HTML($format)
+=head2 FB_SOFTBANK_HTML()
 
-This works only for SoftBank's private emoji code points
-but provides Google's private code point for C<sprintf()>.
+For emojis by SoftBank.
 
-=head2 FB_GOOGLE_HTML($format)
+=head2 FB_GOOGLE_HTML()
 
-This works only for Google's private emoji code points.
+For emojis by Google.
 
-=head2 FB_UNICODE_HTML($format)
+=head2 FB_UNICODE_HTML()
 
-This works only for emojis which has a standard code point.
+For emojis of standard code points.
 
 =head1 AUTHOR
 
@@ -100,63 +96,74 @@ use strict;
 use warnings;
 use base 'Exporter';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our @EXPORT = qw(
     FB_DOCOMO_TEXT FB_KDDI_TEXT FB_SOFTBANK_TEXT FB_GOOGLE_TEXT FB_UNICODE_TEXT
     FB_DOCOMO_HTML FB_KDDI_HTML FB_SOFTBANK_HTML FB_GOOGLE_HTML FB_UNICODE_HTML
 );
 
-our $HEX_FORMAT      = '%04X';
-our $XMLCREF_FORMAT  = '&#x%04X;';
-our $DOCOMO_FORMAT   = '<img src="http://mail.google.com/mail/e/docomo_ne_jp/%03X" class="e" />';
-our $KDDI_FORMAT     = '<img src="http://mail.google.com/mail/e/ezweb_ne_jp/%03X" class="e" />';
-our $SOFTBANK_FORMAT = '<img src="http://mail.google.com/mail/e/softbank_ne_jp/%03X" class="e" />';
-our $GOOGLE_FORMAT   = '<img src="http://mail.google.com/mail/e/google_com/%03X" class="e" />';
-our $UNICODE_FORMAT  = '<img src="http://mail.google.com/mail/e/google_com/%03X" class="e" />';
+my $HEX4              = '%04X';
+our $FB_TEXT          = '[%s]';
+our $FB_FORMAT        = '&#x%04X;';
+our $FB_DOCOMO_HTML   = '<img src="http://mail.google.com/mail/e/docomo_ne_jp/%03X" class="e" />';
+our $FB_KDDI_HTML     = '<img src="http://mail.google.com/mail/e/ezweb_ne_jp/%03X" class="e" />';
+our $FB_SOFTBANK_HTML = '<img src="http://mail.google.com/mail/e/softbank_ne_jp/%03X" class="e" />';
+our $FB_GOOGLE_HTML   = '<img src="http://mail.google.com/mail/e/%03X" class="e" />';
+our $FB_UNICODE_HTML  = '<img src="http://mail.google.com/mail/e/%03X" class="e" />';
 
 sub FB_DOCOMO_TEXT {
+    my $format = shift || $FB_TEXT;
     sub {
         my $code = shift;
-        my $hex  = sprintf $HEX_FORMAT => $code;
-        return sprintf $XMLCREF_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex};
-        $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex};
+        my $hex  = sprintf $HEX4 => $code;
+        return sprintf $FB_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex};
+        my $fb = $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex};
+        sprintf $format => $fb;
     }
 }
 
 sub FB_KDDI_TEXT {
+    my $format = shift || $FB_TEXT;
     sub {
         my $code = shift;
-        my $hex  = sprintf $HEX_FORMAT => $code;
-        return sprintf $XMLCREF_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
-        $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
+        my $hex  = sprintf $HEX4 => $code;
+        return sprintf $FB_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
+        my $fb = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
+        sprintf $format => $fb;
     };
 }
 
 sub FB_SOFTBANK_TEXT {
+    my $format = shift || $FB_TEXT;
     sub {
         my $code = shift;
-        my $hex  = sprintf $HEX_FORMAT => $code;
-        return sprintf $XMLCREF_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex};
-        $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex};
+        my $hex  = sprintf $HEX4 => $code;
+        return sprintf $FB_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex};
+        my $fb = $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex};
+        sprintf $format => $fb;
     };
 }
 
 sub FB_GOOGLE_TEXT {
+    my $format = shift || $FB_TEXT;
     sub {
         my $code = shift;
-        my $hex  = sprintf $HEX_FORMAT => $code;
-        return sprintf $XMLCREF_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
-        $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
+        my $hex  = sprintf $HEX4 => $code;
+        return sprintf $FB_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
+        my $fb = $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
+        sprintf $format => $fb;
     };
 }
 
 sub FB_UNICODE_TEXT {
+    my $format = shift || $FB_TEXT;
     sub {
         my $code = shift;
-        my $hex  = sprintf $HEX_FORMAT => $code;
-        return sprintf $XMLCREF_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex};
-        $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex};
+        my $hex  = sprintf $HEX4 => $code;
+        return sprintf $FB_FORMAT => $code unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex};
+        my $fb = $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex};
+        sprintf $format => $fb;
     };
 }
 
@@ -167,51 +174,51 @@ my $softbank = Encode::find_encoding('x-utf8-e4u-softbank-pp');
 my $unicode  = Encode::find_encoding('x-utf8-e4u-unicode-pp');
 
 sub FB_DOCOMO_HTML {
-    my $format = shift || $DOCOMO_FORMAT;
+    my $format = shift || $FB_DOCOMO_HTML;
     sub {
         my $code = shift;
         my $google = ord $docomo->decode($utf8->encode(chr $code));
-        return sprintf $XMLCREF_FORMAT => $code if ($google < 0xFE000);
-        sprintf $format => ($google & 0x07FF);
+        return sprintf $FB_FORMAT => $code if ($google < 0xFE000);
+        sprintf $format => ($google & 0x0FFF);
     }
 }
 
 sub FB_KDDI_HTML {
-    my $format = shift || $KDDI_FORMAT;
+    my $format = shift || $FB_KDDI_HTML;
     sub {
         my $code = shift;
         my $google = ord $kddi->decode($utf8->encode(chr $code));
-        return sprintf $XMLCREF_FORMAT => $code if ($google < 0xFE000);
-        sprintf $format => ($google & 0x07FF);
+        return sprintf $FB_FORMAT => $code if ($google < 0xFE000);
+        sprintf $format => ($google & 0x0FFF);
     }
 }
 
 sub FB_SOFTBANK_HTML {
-    my $format = shift || $SOFTBANK_FORMAT;
+    my $format = shift || $FB_SOFTBANK_HTML;
     sub {
         my $code = shift;
         my $google = ord $softbank->decode($utf8->encode(chr $code));
-        return sprintf $XMLCREF_FORMAT => $code if ($google < 0xFE000);
-        sprintf $format => ($google & 0x07FF);
+        return sprintf $FB_FORMAT => $code if ($google < 0xFE000);
+        sprintf $format => ($google & 0x0FFF);
     }
 }
 
 sub FB_GOOGLE_HTML {
-    my $format = shift || $GOOGLE_FORMAT;
+    my $format = shift || $FB_GOOGLE_HTML;
     sub {
         my $code = shift;
-        return sprintf $XMLCREF_FORMAT => $code if ($code < 0xFE000);
-        sprintf $format => ($code & 0x07FF);
+        return sprintf $FB_FORMAT => $code if ($code < 0xFE000);
+        sprintf $format => ($code & 0x0FFF);
     };
 }
 
 sub FB_UNICODE_HTML {
-    my $format = shift || $UNICODE_FORMAT;
+    my $format = shift || $FB_UNICODE_HTML;
     sub {
         my $code = shift;
         my $google = ord $unicode->decode($utf8->encode(chr $code));
-        return sprintf $XMLCREF_FORMAT => $code if ($google < 0xFE000);
-        sprintf $format => ($google & 0x07FF);
+        return sprintf $FB_FORMAT => $code if ($google < 0xFE000);
+        sprintf $format => ($google & 0x0FFF);
     };
 }
 
