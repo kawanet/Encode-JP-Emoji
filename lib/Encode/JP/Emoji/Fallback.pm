@@ -34,27 +34,46 @@ C<x-sjis-e4u-none> and C<x-utf8-e4u-none> encodings which rejects any emojis.
 =head2 FB_DOCOMO_TEXT()
 
 This returns emoji name defined by DoCoMo.
-Note that this works only for DoCoMo's private emoji code points: U+E63E ... U+E757.
+Note that this works only for DoCoMo's private emoji code points. Ex.,
+
+    Encode::from_to($html, 'x-utf8-emoji-docomo', 'x-utf8-emoji-none', FB_DOCOMO_TEXT());
 
 =head2 FB_KDDI_TEXT()
 
 This returns emoji name defined by KDDI.
-Note that this works only for KDDI's private emoji code points: U+E468 ... U+EB8E.
+Note that this works only for KDDI's private emoji code points. Ex.,
+
+    Encode::from_to($html, 'x-sjis-emoji-kddi', 'x-sjis-emoji-none', FB_KDDI_TEXT());
+
+=head2 FB_KDDIWEB_TEXT()
+
+This returns emoji name defined by KDDI.
+Note that this works only for B<undocumented version> of KDDI's private emoji code points. Ex.,
+
+    Encode::from_to($html, 'x-utf8-emoji-kddiweb', 'x-utf8-emoji-none', FB_KDDIWEB_TEXT());
+
+See L<http://subtech.g.hatena.ne.jp/miyagawa/20071112/1194865208> for more detail.
 
 =head2 FB_SOFTBANK_TEXT()
 
 This returns emoji name defined by SoftBank.
-Note that this works only for SoftBank's private emoji code points: U+E001 ... U+E53E.
+Note that this works only for SoftBank's private emoji code points. Ex.,
+
+    Encode::from_to($html, 'x-sjis-emoji-softbank', 'x-sjis-emoji-none', FB_SOFTBANK_TEXT());
 
 =head2 FB_GOOGLE_TEXT()
 
 This returns emoji name defined by emoji4unicode project on Google Code.
-Note that this works only for Google's private emoji code points: U+FE000 ... U+FEEA0.
+Note that this works only for Google's private emoji code points. Ex.,
+
+    Encode::from_to($html, 'x-utf8-e4u-google', 'x-utf8-e4u-none', FB_GOOGLE_TEXT());
 
 =head2 FB_UNICODE_TEXT()
 
 This will return character name defined on the Unicode Standard.
-Note that this works only for emojis of standard code points.
+Note that this works only for emojis of standard code points. Ex.,
+
+    Encode::from_to($html, 'x-utf8-e4u-unicode', 'x-utf8-e4u-none', FB_UNICODE_TEXT());
 
 =head1 AUTHOR
 
@@ -79,7 +98,7 @@ use Encode ();
 our $VERSION = '0.03';
 
 our @EXPORT = qw(
-    FB_DOCOMO_TEXT FB_KDDI_TEXT FB_SOFTBANK_TEXT FB_GOOGLE_TEXT FB_UNICODE_TEXT
+    FB_DOCOMO_TEXT FB_KDDI_TEXT FB_KDDIWEB_TEXT FB_SOFTBANK_TEXT FB_GOOGLE_TEXT FB_UNICODE_TEXT
 );
 
 our $FB_TEXT = '[%s]';
@@ -105,6 +124,17 @@ sub FB_KDDI_TEXT {
         my $hex  = sprintf $hex4 => $code;
         return $latin1->encode(chr $code, $fb) unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
         my $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
+        sprintf $FB_TEXT => $text;
+    };
+}
+
+sub FB_KDDIWEB_TEXT {
+    my $fb = shift || Encode::FB_XMLCREF();
+    sub {
+        my $code = shift;
+        my $hex  = sprintf $hex4 => $code;
+        return $latin1->encode(chr $code, $fb) unless exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddiweb{$hex};
+        my $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddiweb{$hex};
         sprintf $FB_TEXT => $text;
     };
 }

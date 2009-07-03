@@ -21,12 +21,11 @@ t/21-roundtrip-kddi.t
 t/22-roundtrip-softbank.t
 t/23-roundtrip-softbank3g.t
 t/24-roundtrip-softbank2g.t
+t/25-roundtrip-kddiweb.t
 t/26-roundtrip-unicode.t
 t/40-mime-name.t
 t/41-fallback.t
 t/42-fallback-text.t
-t/43-fallback-html.t
-t/44-alias.t
 t/45-property.t
 t/70-synopsis-emoji.t
 t/71-synopsis-fallback.t

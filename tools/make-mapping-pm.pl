@@ -8,8 +8,8 @@ use lib qw(../Unicode-Emoji-E4U/lib);
 use Unicode::Emoji::E4U;
 
 my $INDENT = '    ';
-my $CP932_SRC = [qw(docomo kddi softbank)];
-my $UTF8_SRC  = [qw(docomo kddi softbank google unicode)];
+my $CP932_SRC = [qw(docomo kddi kddiweb softbank)];
+my $UTF8_SRC  = [qw(docomo kddi kddiweb softbank google unicode)];
 
 if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
     print STDERR "Usage:\n";
@@ -262,7 +262,8 @@ sub make_charnames_var {
             $name = &find_name_ja(google => $hex);
         } else {
             # carrier name_ja
-            $name = $e4u->$basemap->find(unicode => $hex)->name_ja;
+            $name = $e->name_ja;
+#           $name = $e4u->$basemap->find(unicode => $hex)->name_ja;
         }
         next unless defined $name;
         $name =~ s/([\'\"\$\@\%\&\*\\])/\\$1/g;

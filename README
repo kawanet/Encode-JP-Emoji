@@ -29,41 +29,76 @@ SYNOPSIS
 DESCRIPTION
     This module provides encodings which support emoji picture characters.
 
-    The first group of encodings is for decoding from Shift_JIS (CP932)
-    octets to carriers' private code points UTF-8 string and vice versa.
+    The first group of encodings uses carriers' private code points as
+    Perl's internal string which has UTF-8 flag on.
 
         Canonical                   Encoding    Octets Emoji    String Emoji
         --------------------------------------------------------------------
         x-sjis-emoji-docomo         Shift_JIS   DoCoMo          DoCoMo
-        x-sjis-emoji-kddi           Shift_JIS   KDDI            KDDI
-        x-sjis-emoji-softbank       Shift_JIS   SoftBank 2G/3G  SoftBank
-        x-sjis-emoji-softbank2g     Shift_JIS   SoftBank 2G     SoftBank
-        x-sjis-emoji-softbank3g     Shift_JIS   SoftBank 3G     SoftBank
+        x-sjis-emoji-kddi           Shift_JIS   KDDI(S)         KDDI(A)
+        x-sjis-emoji-kddiweb        Shift_JIS   KDDI(S)         KDDI(B)
+        x-sjis-emoji-softbank       Shift_JIS   SoftBank(2G/3G) SoftBank
+        x-sjis-emoji-softbank2g     Shift_JIS   SoftBank(2G)    SoftBank
+        x-sjis-emoji-softbank3g     Shift_JIS   SoftBank(3G)    SoftBank
+        x-utf8-emoji-docomo         UTF-8       DoCoMo          DoCoMo
+        x-utf8-emoji-kddi           UTF-8       KDDI(A)         KDDI(A)
+        x-utf8-emoji-kddiweb        UTF-8       KDDI(B)         KDDI(B)
+        x-utf8-emoji-softbank       UTF-8       SoftBank(2G/3G) SoftBank
+        x-utf8-emoji-softbank2g     UTF-8       SoftBank(2G)    SoftBank
+        x-utf8-emoji-softbank3g     UTF-8       SoftBank(3G)    SoftBank
+        x-utf8-emoji-google         UTF-8       Google          Google
+        x-utf8-emoji-unicode        UTF-8       Unicode Std.    Unicode Std.
         --------------------------------------------------------------------
 
-    The other group is for decoding from Shift_JIS (CP932) octets to
-    Googles's private code points UTF-8 string and vice versa.
+    KDDI(A) is documented version which uses their private code points.
+    KDDI(B), on the other hand, is undocumented version of them. KDDI(S) is
+    the same Shift_JIS encoding both for KDDI(A) and (B).
+
+    SoftBank(2G) uses escape sequence styles of emoji. SoftBank(3G) uses
+    binary representations. SoftBank(2G/3G) accepts both for decoding and
+    encodes to 3G binary style.
+
+    "x-utf8-emoji-unicode" encodes the Unicode's standard code points
+    proposed by emoji4unicode project.
+
+    Note that "x-utf8-emoji-***" encodings, in fact, need to do nothing when
+    they are decoded and encoded.
+
+    The next group uses Googles's private code points internaly.
 
         Canonical                   Encoding    Octets Emoji    String Emoji
         --------------------------------------------------------------------
         x-sjis-e4u-docomo           Shift_JIS   DoCoMo          Google
-        x-sjis-e4u-kddi             Shift_JIS   KDDI            Google
-        x-sjis-e4u-softbank         Shift_JIS   SoftBank 2G/3G  Google
-        x-sjis-e4u-softbank2g       Shift_JIS   SoftBank 2G     Google
-        x-sjis-e4u-softbank3g       Shift_JIS   SoftBank 3G     Google
-        x-sjis-e4u-none             Shift_JIS   (No Emoji)      Google
+        x-sjis-e4u-kddi             Shift_JIS   KDDI(S)         Google
+        x-sjis-e4u-kddiweb          Shift_JIS   KDDI(S)         Google
+        x-sjis-e4u-softbank         Shift_JIS   SoftBank(2G/3G) Google
+        x-sjis-e4u-softbank2g       Shift_JIS   SoftBank(2G)    Google
+        x-sjis-e4u-softbank3g       Shift_JIS   SoftBank(3G)    Google
         x-utf8-e4u-docomo           UTF-8       DoCoMo          Google
-        x-utf8-e4u-kddi             UTF-8       KDDI            Google
-        x-utf8-e4u-softbank         UTF-8       SoftBank 2G/3G  Google
-        x-utf8-e4u-softbank2g       UTF-8       SoftBank 2G     Google
-        x-utf8-e4u-softbank3g       UTF-8       SoftBank 3G     Google
+        x-utf8-e4u-kddi             UTF-8       KDDI(A)         Google
+        x-utf8-e4u-kddiweb          UTF-8       KDDI(B)         Google
+        x-utf8-e4u-softbank         UTF-8       SoftBank(2G/3G) Google
+        x-utf8-e4u-softbank2g       UTF-8       SoftBank(2G)    Google
+        x-utf8-e4u-softbank3g       UTF-8       SoftBank(3G)    Google
+        x-utf8-e4u-google           UTF-8       Google          Google
         x-utf8-e4u-unicode          UTF-8       Unicode Std.    Google
-        x-utf8-e4u-none             UTF-8       (No Emoji)      (Any PUA)
         --------------------------------------------------------------------
 
-    The cross-carriers mapping table of this module is based on
-    emoji4unicode, Emoji for Unicode, project on Google Code. See more
-    detail of the project on <http://code.google.com/p/emoji4unicode/>.
+    This means Google's encoding could be the interchange encoding for
+    others. The cross-carriers mapping tables are based on emoji4unicode,
+    Emoji for Unicode, project on Google Code. See more detail on
+    <http://code.google.com/p/emoji4unicode/> about the project.
+
+    Tha last group rejects any emojis. You would use these encodings with
+    Encode::JP::Emoji::Fallback fallback functions.
+
+        Canonical                   Encoding
+        --------------------------------------------------------------------
+        x-sjis-emoji-none           Shift_JIS
+        x-utf8-emoji-none           UTF-8
+        x-sjis-e4u-none             Shift_JIS
+        x-utf8-e4u-none             UTF-8
+        --------------------------------------------------------------------
 
 DEPENDENCIES
     This module requires Perl version 5.8.1 or later.
