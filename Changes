@@ -6,6 +6,7 @@ Encode-JP-Emoji-0.03 (2009-07-04):
   - x-*-*-kddi encoding renamed to x-*-*-kddiapp.
   - x-*-*-kddiweb encoding added for undocumented version of KDDI's private code points.
   - x-*-*-softbank encoding removed. use x-*-*-softbank3g instead.
+  - x-utf8-emoji-softbank2g-pp encoding added.
   - x-*-*-softbank2g decoding bug fixed.
   - FB_EMOJI_TEXT fallback added.
   - Encode::JP::Emoji::FB_EMOJI_GMAIL split.

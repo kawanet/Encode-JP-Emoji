@@ -168,6 +168,12 @@ __PACKAGE__->Define('x-sjis-emoji-softbank2g-pp');
 *after_decode  = \&Encode::JP::Emoji::Encoding::Util::softbankauto_cp932_to_softbank_unicode;
 *before_encode = \&Encode::JP::Emoji::Encoding::Util::softbank_unicode_to_softbank_escape;
 
+package Encode::JP::Emoji::Encoding::X_UTF8_EMOJI_SOFTBANK2G_PP;
+use base 'Encode::JP::Emoji::Encoding::UTF8';
+__PACKAGE__->Define('x-utf8-emoji-softbank2g-pp');
+*after_decode  = \&Encode::JP::Emoji::Encoding::Util::softbank_escape_to_softbank_unicode;
+*before_encode = \&Encode::JP::Emoji::Encoding::Util::softbank_unicode_to_softbank_escape;
+
 package Encode::JP::Emoji::Encoding::X_SJIS_E4U_SOFTBANK2G_PP;
 use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
 __PACKAGE__->Define('x-sjis-e4u-softbank2g-pp');
@@ -237,11 +243,11 @@ __PACKAGE__->Define('x-sjis-e4u-none-pp');
 package Encode::JP::Emoji::Encoding::Alias;
 use Encode::Alias;
 
-define_alias('x-utf8-emoji-docomo-pp'     => 'utf8');
-define_alias('x-utf8-emoji-kddiapp-pp'    => 'utf8');
-define_alias('x-utf8-emoji-kddiweb-pp'    => 'utf8');
-define_alias('x-utf8-emoji-softbank2g-pp' => 'utf8');
-define_alias('x-utf8-emoji-softbank3g-pp' => 'utf8');
+define_alias('x-utf8-emoji-docomo-pp'       => 'utf8');
+define_alias('x-utf8-emoji-kddiapp-pp'      => 'utf8');
+define_alias('x-utf8-emoji-kddiweb-pp'      => 'utf8');
+# define_alias('x-utf8-emoji-softbank2g-pp' => 'utf8');
+define_alias('x-utf8-emoji-softbank3g-pp'   => 'utf8');
 
 define_alias('x-utf8-e4u-google-pp'       => 'utf8');
 
