@@ -27,6 +27,7 @@ t/40-mime-name.t
 t/41-fallback.t
 t/42-fallback-text.t
 t/45-property.t
+t/47-softbank2g.t
 t/70-synopsis-emoji.t
 t/71-synopsis-fallback.t
 t/docomo-table.tsv
