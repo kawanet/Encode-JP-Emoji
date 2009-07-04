@@ -21,12 +21,14 @@ t/21-roundtrip-kddiapp.t
 t/22-roundtrip-kddiweb.t
 t/23-roundtrip-softbank3g.t
 t/24-roundtrip-softbank2g.t
+t/25-roundtrip-mixed.t
 t/26-roundtrip-unicode.t
 t/40-mime-name.t
 t/41-fallback.t
 t/42-fallback-text.t
 t/45-property.t
 t/47-softbank2g.t
+t/48-mixed.t
 t/70-synopsis-emoji.t
 t/71-synopsis-fallback.t
 t/docomo-table.tsv
