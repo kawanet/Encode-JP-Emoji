@@ -26,6 +26,7 @@ my @encodings = qw(
     x-utf8-e4u-kddiweb-pp           x-utf8-e4u-kddiweb
     x-utf8-e4u-softbank2g-pp        x-utf8-e4u-softbank2g
     x-utf8-e4u-softbank3g-pp        x-utf8-e4u-softbank3g
+    x-utf8-e4u-mixed-pp             x-utf8-e4u-mixed
     x-utf8-e4u-google-pp            x-utf8-e4u-google
     x-utf8-e4u-unicode-pp           x-utf8-e4u-unicode
     x-sjis-emoji-none-pp            x-sjis-emoji-none

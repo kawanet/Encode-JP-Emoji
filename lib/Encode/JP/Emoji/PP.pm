@@ -41,6 +41,7 @@ The next group:
 
     Canonical                       Alias
     --------------------------------------------------------------------
+    x-utf8-e4u-mixed-pp             x-utf8-e4u-mixed
     x-utf8-e4u-google-pp            x-utf8-e4u-google
     x-utf8-e4u-unicode-pp           x-utf8-e4u-unicode
     --------------------------------------------------------------------
@@ -105,6 +106,7 @@ define_alias('x-utf8-e4u-kddiweb'      => 'x-utf8-e4u-kddiweb-pp');
 define_alias('x-utf8-e4u-softbank2g'   => 'x-utf8-e4u-softbank2g-pp');
 define_alias('x-utf8-e4u-softbank3g'   => 'x-utf8-e4u-softbank3g-pp');
 
+define_alias('x-utf8-e4u-mixed'        => 'x-utf8-e4u-mixed-pp');
 define_alias('x-utf8-e4u-google'       => 'x-utf8-e4u-google-pp');
 define_alias('x-utf8-e4u-unicode'      => 'x-utf8-e4u-unicode-pp');
 

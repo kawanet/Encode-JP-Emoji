@@ -200,6 +200,14 @@ __PACKAGE__->Define('x-utf8-e4u-softbank3g-pp');
 *after_decode  = \&Encode::JP::Emoji::Mapping::softbank_unicode_to_google_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_softbank_unicode;
 
+# Mixed
+
+package Encode::JP::Emoji::Encoding::X_UTF8_E4U_MIXED_PP;
+use base 'Encode::JP::Emoji::Encoding::UTF8';
+__PACKAGE__->Define('x-utf8-e4u-mixed-pp');
+*after_decode  = \&Encode::JP::Emoji::Mapping::mixed_unicode_to_google_unicode;
+*before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_mixed_unicode;
+
 # Unicode Standard
 
 package Encode::JP::Emoji::Encoding::X_UTF8_E4U_UNICODE_PP;

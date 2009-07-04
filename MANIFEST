@@ -6,7 +6,7 @@ Makefile.PL
 README
 lib/Encode/JP/Emoji.pm
 lib/Encode/JP/Emoji/Encoding.pm
-lib/Encode/JP/Emoji/Fallback.pm
+lib/Encode/JP/Emoji/FB_EMOJI_TEXT.pm
 lib/Encode/JP/Emoji/Mapping.pm
 lib/Encode/JP/Emoji/PP.pm
 lib/Encode/JP/Emoji/Property.pm
@@ -17,11 +17,10 @@ t/11-scream.t
 t/12-keycap1.t
 t/13-newmoon.t
 t/20-roundtrip-docomo.t
-t/21-roundtrip-kddi.t
-t/22-roundtrip-softbank.t
+t/21-roundtrip-kddiapp.t
+t/22-roundtrip-kddiweb.t
 t/23-roundtrip-softbank3g.t
 t/24-roundtrip-softbank2g.t
-t/25-roundtrip-kddiweb.t
 t/26-roundtrip-unicode.t
 t/40-mime-name.t
 t/41-fallback.t

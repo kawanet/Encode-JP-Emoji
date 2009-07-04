@@ -78,6 +78,7 @@ Note that this accepts only emojis of standard code points.
 =head2 FB_EMOJI_TEXT()
 
 This accepts all emoji code points above for ease of use.
+Note that SoftBank is prior to KDDIapp in their conflicts code points.
 
 =head1 AUTHOR
 

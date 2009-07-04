@@ -37,27 +37,26 @@ as Perl's internal string which has UTF-8 flag on.
     Canonical                   Encoding    Octets Emoji    String Emoji
     --------------------------------------------------------------------
     x-sjis-emoji-docomo         Shift_JIS   DoCoMo          DoCoMo
-    x-sjis-emoji-kddiapp        Shift_JIS   KDDI(S)         KDDI(A)
-    x-sjis-emoji-kddiweb        Shift_JIS   KDDI(S)         KDDI(B)
+    x-sjis-emoji-kddiapp        Shift_JIS   KDDI            KDDI(app)
+    x-sjis-emoji-kddiweb        Shift_JIS   KDDI            KDDI(web)
     x-sjis-emoji-softbank2g     Shift_JIS   SoftBank(2G)    SoftBank
     x-sjis-emoji-softbank3g     Shift_JIS   SoftBank(3G)    SoftBank
     x-utf8-emoji-docomo         UTF-8       DoCoMo          DoCoMo
-    x-utf8-emoji-kddiapp        UTF-8       KDDI(A)         KDDI(A)
-    x-utf8-emoji-kddiweb        UTF-8       KDDI(B)         KDDI(B)
+    x-utf8-emoji-kddiapp        UTF-8       KDDI(app)       KDDI(app)
+    x-utf8-emoji-kddiweb        UTF-8       KDDI(web)       KDDI(web)
     x-utf8-emoji-softbank2g     UTF-8       SoftBank(2G)    SoftBank
     x-utf8-emoji-softbank3g     UTF-8       SoftBank(3G)    SoftBank
     --------------------------------------------------------------------
 
 KDDI has two version of thier private code points.
-KDDI(A) is official and documented version used in EZappli and character references.
-KDDI(B), on the other hand, is B<undocumented version> but used in UTF-8 web pages.
-KDDI(S) is the Shift_JIS encoding both for KDDI(A) and (B).
-Use KDDI(B) encodings recommended in most cases.
+KDDI(app) is official and documented version used in EZappli and character references.
+KDDI(web), on the other hand, is B<undocumented version> but used in UTF-8 web pages.
+Use KDDI(web) encoding recommended in most cases.
 
 SoftBank also has two version of thier emoji representations.
 SoftBank(2G) uses escape sequence style.
 SoftBank(3G) uses binary representations.
-Use SoftBank(3G) encodings recommended in most cases.
+Use SoftBank(3G) encoding recommended in most cases.
 
 The second group uses Googles's private code points internaly.
 This means Google's encoding could be the interchange encoding for others.
@@ -65,13 +64,13 @@ This means Google's encoding could be the interchange encoding for others.
     Canonical                   Encoding    Octets Emoji    String Emoji
     --------------------------------------------------------------------
     x-sjis-e4u-docomo           Shift_JIS   DoCoMo          Google
-    x-sjis-e4u-kddiapp          Shift_JIS   KDDI(S)         Google
-    x-sjis-e4u-kddiweb          Shift_JIS   KDDI(S)         Google
+    x-sjis-e4u-kddiapp          Shift_JIS   KDDI            Google
+    x-sjis-e4u-kddiweb          Shift_JIS   KDDI            Google
     x-sjis-e4u-softbank2g       Shift_JIS   SoftBank(2G)    Google
     x-sjis-e4u-softbank3g       Shift_JIS   SoftBank(3G)    Google
     x-utf8-e4u-docomo           UTF-8       DoCoMo          Google
-    x-utf8-e4u-kddiapp          UTF-8       KDDI(A)         Google
-    x-utf8-e4u-kddiweb          UTF-8       KDDI(B)         Google
+    x-utf8-e4u-kddiapp          UTF-8       KDDI(app)       Google
+    x-utf8-e4u-kddiweb          UTF-8       KDDI(web)       Google
     x-utf8-e4u-softbank2g       UTF-8       SoftBank(2G)    Google
     x-utf8-e4u-softbank3g       UTF-8       SoftBank(3G)    Google
     --------------------------------------------------------------------
@@ -86,12 +85,20 @@ The next group also uses Google's.
     --------------------------------------------------------------------
     x-utf8-e4u-unicode          UTF-8       Unicode Std.    Google
     x-utf8-e4u-google           UTF-8       Google          Google
+    x-utf8-e4u-mixed            UTF-8       (mixed)         Google
     --------------------------------------------------------------------
 
 C<x-utf8-e4u-unicode> encodes the Unicode's standard code points proposed
 by emoji4unicode project.
 
 C<x-utf8-e4u-google> is just an alias to C<utf8>.
+
+C<x-utf8-e4u-mixed> accepts all emojis mixed.
+On decoding, however, KDDI(app) emojis would be broken as they have conflicts
+with SoftBank emojis. So B<DO NOT> use KDDI(app) with this.
+On encoding, this replaces Google emojis to others definitively.
+This encoding is friendly for L<Encode::JP::Mobile> and MySQL 5.4.
+Note that MySQL 5.4 does not support four bytes UTF-8 including Google emojis.
 
 Tha last group rejects any emojis above.
 You would use these encodings with L<Encode::JP::Emoji::Fallback> fallback functions.
