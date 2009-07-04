@@ -59,7 +59,7 @@ See L<http://subtech.g.hatena.ne.jp/miyagawa/20071112/1194865208> for more detai
 This returns emoji name defined by SoftBank.
 Note that this accepts only SoftBank's private emoji code points.
 
-    Encode::from_to($html, 'x-sjis-emoji-softbank', 'x-sjis-emoji-none', FB_SOFTBANK_TEXT());
+    Encode::from_to($html, 'x-sjis-emoji-softbank3g', 'x-sjis-emoji-none', FB_SOFTBANK_TEXT());
 
 =head2 FB_GOOGLE_TEXT()
 

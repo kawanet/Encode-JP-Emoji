@@ -101,7 +101,7 @@ This encoding is friendly for L<Encode::JP::Mobile> and MySQL 5.4.
 Note that MySQL 5.4 does not support four bytes UTF-8 including Google emojis.
 
 Tha last group rejects any emojis above.
-You would use these encodings with L<Encode::JP::Emoji::Fallback> fallback functions.
+You would use these encodings with L<Encode::JP::Emoji::FB_EMOJI_TEXT> fallback functions.
 
     Canonical                   Encoding
     --------------------------------------------------------------------
