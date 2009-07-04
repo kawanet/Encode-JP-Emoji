@@ -197,8 +197,8 @@ sub make_converter_sub {
     $list = [sort {$a->$srcx->$srcs cmp $b->$srcx->$srcs} @$list];
 
     my $changed = [grep {$_->$srcx->$srcs ne $_->$dstx->$dsts} @$list];
-    my $srcjoin = join "" => map {$_->$srcx->$srcs} @$changed;
-    my $dstjoin = join "" => map {$_->$dstx->$dsts} @$changed;
+    my $srcjoin = join '' => map {$_->$srcx->$srcs} @$changed;
+    my $dstjoin = join '' => map {$_->$dstx->$dsts} @$changed;
 
     my $maplen = scalar @$changed;
     my $srclen = length $srcjoin;
@@ -212,6 +212,30 @@ sub make_converter_sub {
         # no need to translate
         push @$out, $INDENT, "# through\n";
     } elsif ($maplen == $srclen && $maplen == $dstlen) {
+        # join contiguous characters
+        my $work = [map {+[$_->$srcx->$srcs, $_->$dstx->$dsts]} @$changed];
+        foreach (@$work) {
+            $_->[2] = ord $_->[0];
+            $_->[3] = ord $_->[1];
+        }
+        foreach my $i (1 .. $#$work-1) {
+            my $prev = $work->[$i-1];
+            my $this = $work->[$i];
+            my $next = $work->[$i+1];
+            if ($prev->[2] + 1 == $this->[2] && $this->[2] + 1 == $next->[2] && 
+                $prev->[3] + 1 == $this->[3] && $this->[3] + 1 == $next->[3]) {
+                $this->[4] = '-';       # contiguous
+            }
+        }
+        my $srcshort = join '' => map {$_->[4] || $_->[0]} @$work;
+        my $dstshort = join '' => map {$_->[4] || $_->[1]} @$work;
+        $srcshort =~ s/--+/-/g;
+        $dstshort =~ s/--+/-/g;
+        # use it when it comes half of length
+        if ($srclen / 2 > length $srcshort && $dstlen / 2 > length $dstshort) {
+            $srcjoin = $srcshort;
+            $dstjoin = $dstshort;
+        }
         # 1:1 translate (tr/// would be 20-50% faster than s///)
         push @$out, $INDENT, "\$_[1] =~ tr\n";
         push @$out, $INDENT, "[$srcjoin]\n";
