@@ -26,8 +26,8 @@ sub read_tsv {
 
 sub google_list {
     my $encode1 = 'x-sjis-e4u-docomo-pp';
-    my $encode2 = 'x-sjis-e4u-kddi-pp';
-    my $encode3 = 'x-sjis-e4u-softbank-pp';
+    my $encode2 = 'x-sjis-e4u-kddiweb-pp';
+    my $encode3 = 'x-sjis-e4u-softbank3g-pp';
 
     my $table1 = read_tsv('t/docomo-table.tsv');
     my $table2 = read_tsv('t/kddi-table.tsv');

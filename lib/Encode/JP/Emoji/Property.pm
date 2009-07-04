@@ -7,43 +7,43 @@ Encode::JP::Emoji::Property - Emoji named character properties
     use utf8;
     use Encode::JP::Emoji::Property;
 
-    /\p{InEmojiDocomoUnicode}/;
-    /\p{InEmojiKddiUnicode}/;
-    /\p{InEmojiKddiwebUnicode}/;
-    /\p{InEmojiSoftbankUnicode}/;
-    /\p{InEmojiUnicodeUnicode}/;
-    /\p{InEmojiGoogleUnicode}/;
-    /\p{InEmojiAnyUnicode}/;
+    /\p{InEmojiDoCoMo}/;
+    /\p{InEmojiKDDIapp}/;
+    /\p{InEmojiKDDIweb}/;
+    /\p{InEmojiSoftBank}/;
+    /\p{InEmojiUnicode}/;
+    /\p{InEmojiGoogle}/;
+    /\p{InEmojiAny}/;
 
 =head1 DESCRIPTION
 
 This exports the following named character properties:
 
-=head2 \p{InEmojiDocomoUnicode}
+=head2 \p{InEmojiDoCoMo}
 
 This matches DoCoMo's private emoji code points: C<U+E63E> ... C<U+E757>.
 
-=head2 \p{InEmojiKddiUnicode}
+=head2 \p{InEmojiKDDIapp}
 
 This matches KDDI's private emoji code points: C<U+E468> ... C<U+EB8E>.
 
-=head2 \p{InEmojiKddiwebUnicode}
+=head2 \p{InEmojiKDDIweb}
 
 This matches B<undocumented version> of KDDI's private emoji code points: C<U+EC40> ... C<U+F0FC>.
 
-=head2 \p{InEmojiSoftbankUnicode}
+=head2 \p{InEmojiSoftBank}
 
 This matches SoftBank's private emoji code points: C<U+E001> ... C<U+E53E>.
 
-=head2 \p{InEmojiGoogleUnicode}
+=head2 \p{InEmojiGoogle}
 
 This matches Google's private emoji code points: C<U+FE000> ... C<U+FEEA0>.
 
-=head2 \p{InEmojiUnicodeUnicode}
+=head2 \p{InEmojiUnicode}
 
 This matches emoji code points which will be defined in the Unicode Standard.
 
-=head2 \p{InEmojiAnyUnicode}
+=head2 \p{InEmojiAny}
 
 This matches any emoji code points above.
 
@@ -70,29 +70,29 @@ use base 'Exporter';
 our $VERSION = '0.02';
 
 our @EXPORT = qw(
-    InEmojiDocomoUnicode
-    InEmojiKddiUnicode
-    InEmojiKddiwebUnicode
-    InEmojiSoftbankUnicode
-    InEmojiUnicodeUnicode
-    InEmojiGoogleUnicode
-    InEmojiAnyUnicode
+    InEmojiDoCoMo
+    InEmojiKDDIapp
+    InEmojiKDDIweb
+    InEmojiSoftBank
+    InEmojiUnicode
+    InEmojiGoogle
+    InEmojiAny
 );
 
-*InEmojiDocomoUnicode   = \&Encode::JP::Emoji::Mapping::InEmojiDocomoUnicode;
-*InEmojiKddiUnicode     = \&Encode::JP::Emoji::Mapping::InEmojiKddiUnicode;
-*InEmojiKddiwebUnicode  = \&Encode::JP::Emoji::Mapping::InEmojiKddiwebUnicode;
-*InEmojiSoftbankUnicode = \&Encode::JP::Emoji::Mapping::InEmojiSoftbankUnicode;
-*InEmojiUnicodeUnicode  = \&Encode::JP::Emoji::Mapping::InEmojiUnicodeUnicode;
-*InEmojiGoogleUnicode   = \&Encode::JP::Emoji::Mapping::InEmojiGoogleUnicode;
+*InEmojiDoCoMo   = \&Encode::JP::Emoji::Mapping::InEmojiDocomoUnicode;
+*InEmojiKDDIapp  = \&Encode::JP::Emoji::Mapping::InEmojiKddiUnicode; # CAUTION!
+*InEmojiKDDIweb  = \&Encode::JP::Emoji::Mapping::InEmojiKddiwebUnicode;
+*InEmojiSoftBank = \&Encode::JP::Emoji::Mapping::InEmojiSoftbankUnicode;
+*InEmojiUnicode  = \&Encode::JP::Emoji::Mapping::InEmojiUnicodeUnicode;
+*InEmojiGoogle   = \&Encode::JP::Emoji::Mapping::InEmojiGoogleUnicode;
 
-sub InEmojiAnyUnicode { return <<"EOT"; }
-+Encode::JP::Emoji::Property::InEmojiDocomoUnicode
-+Encode::JP::Emoji::Property::InEmojiKddiUnicode
-+Encode::JP::Emoji::Property::InEmojiKddiwebUnicode
-+Encode::JP::Emoji::Property::InEmojiSoftbankUnicode
-+Encode::JP::Emoji::Property::InEmojiUnicodeUnicode
-+Encode::JP::Emoji::Property::InEmojiGoogleUnicode
+sub InEmojiAny { return <<"EOT"; }
++Encode::JP::Emoji::Property::InEmojiDoCoMo
++Encode::JP::Emoji::Property::InEmojiKDDIapp
++Encode::JP::Emoji::Property::InEmojiKDDIweb
++Encode::JP::Emoji::Property::InEmojiSoftBank
++Encode::JP::Emoji::Property::InEmojiUnicode
++Encode::JP::Emoji::Property::InEmojiGoogle
 EOT
 
 1;

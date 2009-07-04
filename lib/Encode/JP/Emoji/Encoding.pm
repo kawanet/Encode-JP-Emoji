@@ -120,23 +120,23 @@ __PACKAGE__->Define('x-utf8-e4u-docomo-pp');
 *after_decode  = \&Encode::JP::Emoji::Mapping::docomo_unicode_to_google_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_docomo_unicode;
 
-# KDDI
+# KDDIapp
 
-package Encode::JP::Emoji::Encoding::X_SJIS_EMOJI_KDDI_PP;
+package Encode::JP::Emoji::Encoding::X_SJIS_EMOJI_KDDIAPP_PP;
 use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
-__PACKAGE__->Define('x-sjis-emoji-kddi-pp');
+__PACKAGE__->Define('x-sjis-emoji-kddiapp-pp');
 *after_decode  = \&Encode::JP::Emoji::Mapping::kddi_cp932_to_kddi_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::kddi_unicode_to_kddi_cp932;
 
-package Encode::JP::Emoji::Encoding::X_SJIS_E4U_KDDI_PP;
+package Encode::JP::Emoji::Encoding::X_SJIS_E4U_KDDIAPP_PP;
 use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
-__PACKAGE__->Define('x-sjis-e4u-kddi-pp');
+__PACKAGE__->Define('x-sjis-e4u-kddiapp-pp');
 *after_decode  = \&Encode::JP::Emoji::Mapping::kddi_cp932_to_google_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_kddi_cp932;
 
-package Encode::JP::Emoji::Encoding::X_UTF8_E4U_KDDI_PP;
+package Encode::JP::Emoji::Encoding::X_UTF8_E4U_KDDIAPP_PP;
 use base 'Encode::JP::Emoji::Encoding::UTF8';
-__PACKAGE__->Define('x-utf8-e4u-kddi-pp');
+__PACKAGE__->Define('x-utf8-e4u-kddiapp-pp');
 *after_decode  = \&Encode::JP::Emoji::Mapping::kddi_unicode_to_google_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_kddi_unicode;
 
@@ -159,26 +159,6 @@ use base 'Encode::JP::Emoji::Encoding::UTF8';
 __PACKAGE__->Define('x-utf8-e4u-kddiweb-pp');
 *after_decode  = \&Encode::JP::Emoji::Mapping::kddiweb_unicode_to_google_unicode;
 *before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_kddiweb_unicode;
-
-# SoftBank (auto)
-
-package Encode::JP::Emoji::Encoding::X_SJIS_EMOJI_SOFTBANK_PP;
-use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
-__PACKAGE__->Define('x-sjis-emoji-softbank-pp');
-*after_decode  = \&Encode::JP::Emoji::Encoding::Util::softbankauto_cp932_to_softbank_unicode;
-*before_encode = \&Encode::JP::Emoji::Mapping::softbank_unicode_to_softbank_cp932;
-
-package Encode::JP::Emoji::Encoding::X_SJIS_E4U_SOFTBANK_PP;
-use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
-__PACKAGE__->Define('x-sjis-e4u-softbank-pp');
-*after_decode  = \&Encode::JP::Emoji::Encoding::Util::softbankauto_cp932_to_google_unicode;
-*before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_softbank_cp932;
-
-package Encode::JP::Emoji::Encoding::X_UTF8_E4U_SOFTBANK_PP;
-use base 'Encode::JP::Emoji::Encoding::UTF8';
-__PACKAGE__->Define('x-utf8-e4u-softbank-pp');
-*after_decode  = \&Encode::JP::Emoji::Encoding::Util::softbankauto_unicode_to_google_unicode;
-*before_encode = \&Encode::JP::Emoji::Mapping::google_unicode_to_softbank_unicode;
 
 # SoftBank 2G
 
@@ -250,14 +230,11 @@ package Encode::JP::Emoji::Encoding::Alias;
 use Encode::Alias;
 
 define_alias('x-utf8-emoji-docomo-pp'     => 'utf8');
-define_alias('x-utf8-emoji-kddi-pp'       => 'utf8');
+define_alias('x-utf8-emoji-kddiapp-pp'    => 'utf8');
 define_alias('x-utf8-emoji-kddiweb-pp'    => 'utf8');
-define_alias('x-utf8-emoji-softbank-pp'   => 'utf8');
 define_alias('x-utf8-emoji-softbank2g-pp' => 'utf8');
 define_alias('x-utf8-emoji-softbank3g-pp' => 'utf8');
 
-define_alias('x-utf8-emoji-unicode-pp'    => 'utf8');
-define_alias('x-utf8-emoji-google-pp'     => 'utf8');
 define_alias('x-utf8-e4u-google-pp'       => 'utf8');
 
 define_alias('x-sjis-emoji-none-pp'       => 'x-sjis-e4u-none-pp');
@@ -269,7 +246,6 @@ package Encode::JP::Emoji::Encoding::Util;
 use Encode::JP::Emoji::Property;
 
 sub softbank_escape_to_softbank_unicode {
-    my $check = $_[2] || sub {''};
     $_[1] =~ s{
         \x1B\x24([GEFOPQ])([\x20-\x7F]+)\x0F?
     }{
@@ -308,7 +284,7 @@ sub softbankauto_unicode_to_google_unicode {
 sub softbank_unicode_to_softbank_escape {
     my $check = $_[2] || sub {''};
     $_[1] =~ s{
-        (\p{InEmojiSoftbankUnicode}+)
+        (\p{InEmojiSoftBank}+)
     }{
         &unescape_vodafone($1)
     }egomx;
@@ -361,7 +337,7 @@ sub unescape_vodafone {
 sub no_emoji {
     my $check = $_[2] || sub {};
     $_[1] =~ s{
-        (\p{InEmojiAnyUnicode})
+        (\p{InEmojiAny})
     }{
         &$check(ord $1);
     }egomx;

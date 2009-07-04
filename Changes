@@ -1,9 +1,13 @@
 ---
 
 Encode-JP-Emoji-0.03 (2009-07-04):
-  - new encoding x-***-***-kddiweb added for undocumented version of KDDI's private code points.
-  - decode x-***-***-softbank2g bug fixed.
-  - Encode::JP::Emoji::Fallback::Gmail split
+  - encoding lineup revised.
+  - x-*-*-kddi encoding renamed to x-*-*-kddiapp.
+  - new encoding x-*-*-kddiweb added for undocumented version of KDDI's private code points.
+  - x-*-*-softbank encoding removed. use x-*-*-softbank3g instead.
+  - x-*-*-softbank2g decoding bug fixed.
+  - FB_EMOJI_TEXT fallback added.
+  - Encode::JP::Emoji::FB_EMOJI_GMAIL split
 
 Encode-JP-Emoji-0.02 (2009-07-01):
   - Some pods and tests added

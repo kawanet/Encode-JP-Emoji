@@ -6,10 +6,10 @@ use Test::More;
 use Encode;
 use Encode::JP::Emoji;
 
-my $encode1 = 'x-sjis-emoji-softbank-pp';
-my $encode2 = 'x-sjis-e4u-softbank-pp';
-my $encode3 = 'x-utf8-e4u-softbank-pp';
-my $table = read_tsv('t/softbank-table.tsv');
+my $encode1 = 'x-sjis-emoji-kddiapp-pp';
+my $encode2 = 'x-sjis-e4u-kddiapp-pp';
+my $encode3 = 'x-utf8-e4u-kddiapp-pp';
+my $table = read_tsv('t/kddi-table.tsv');
 my @keys = sort {$a cmp $b} keys %$table;
 
 plan tests => 4 * @keys;

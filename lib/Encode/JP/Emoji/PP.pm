@@ -10,37 +10,37 @@ The first group:
     Canonical                       Alias
     --------------------------------------------------------------------
     x-sjis-emoji-docomo-pp          x-sjis-emoji-docomo
-    x-sjis-emoji-kddi-pp            x-sjis-emoji-kddi
+    x-sjis-emoji-kddiapp-pp         x-sjis-emoji-kddiapp
     x-sjis-emoji-kddiweb-pp         x-sjis-emoji-kddiweb
-    x-sjis-emoji-softbank-pp        x-sjis-emoji-softbank
     x-sjis-emoji-softbank2g-pp      x-sjis-emoji-softbank2g
     x-sjis-emoji-softbank3g-pp      x-sjis-emoji-softbank3g
     x-utf8-emoji-docomo-pp          x-utf8-emoji-docomo
-    x-utf8-emoji-kddi-pp            x-utf8-emoji-kddi
+    x-utf8-emoji-kddiapp-pp         x-utf8-emoji-kddiapp
     x-utf8-emoji-kddiweb-pp         x-utf8-emoji-kddiweb
-    x-utf8-emoji-softbank-pp        x-utf8-emoji-softbank
     x-utf8-emoji-softbank2g-pp      x-utf8-emoji-softbank2g
     x-utf8-emoji-softbank3g-pp      x-utf8-emoji-softbank3g
-    x-utf8-emoji-google-pp          x-utf8-emoji-google
-    x-utf8-emoji-unicode-pp         x-utf8-emoji-unicode
+    --------------------------------------------------------------------
+
+The second group:
+
+    Canonical                       Alias
+    --------------------------------------------------------------------
+    x-sjis-e4u-docomo-pp            x-sjis-e4u-docomo
+    x-sjis-e4u-kddiapp-pp           x-sjis-e4u-kddiapp
+    x-sjis-e4u-kddiweb-pp           x-sjis-e4u-kddiweb
+    x-sjis-e4u-softbank2g-pp        x-sjis-e4u-softbank2g
+    x-sjis-e4u-softbank3g-pp        x-sjis-e4u-softbank3g
+    x-utf8-e4u-docomo-pp            x-utf8-e4u-docomo
+    x-utf8-e4u-kddiapp-pp           x-utf8-e4u-kddiapp
+    x-utf8-e4u-kddiweb-pp           x-utf8-e4u-kddiweb
+    x-utf8-e4u-softbank2g-pp        x-utf8-e4u-softbank2g
+    x-utf8-e4u-softbank3g-pp        x-utf8-e4u-softbank3g
     --------------------------------------------------------------------
 
 The next group:
 
     Canonical                       Alias
     --------------------------------------------------------------------
-    x-sjis-e4u-docomo-pp            x-sjis-e4u-docomo
-    x-sjis-e4u-kddi-pp              x-sjis-e4u-kddi
-    x-sjis-e4u-kddiweb-pp           x-sjis-e4u-kddiweb
-    x-sjis-e4u-softbank-pp          x-sjis-e4u-softbank
-    x-sjis-e4u-softbank2g-pp        x-sjis-e4u-softbank2g
-    x-sjis-e4u-softbank3g-pp        x-sjis-e4u-softbank3g
-    x-utf8-e4u-docomo-pp            x-utf8-e4u-docomo
-    x-utf8-e4u-kddi-pp              x-utf8-e4u-kddi
-    x-utf8-e4u-kddiweb-pp           x-utf8-e4u-kddiweb
-    x-utf8-e4u-softbank-pp          x-utf8-e4u-softbank
-    x-utf8-e4u-softbank2g-pp        x-utf8-e4u-softbank2g
-    x-utf8-e4u-softbank3g-pp        x-utf8-e4u-softbank3g
     x-utf8-e4u-google-pp            x-utf8-e4u-google
     x-utf8-e4u-unicode-pp           x-utf8-e4u-unicode
     --------------------------------------------------------------------
@@ -76,41 +76,35 @@ package Encode::JP::Emoji::PP;
 use strict;
 use warnings;
 use Encode::JP::Emoji::Encoding;
-use Encode::JP::Emoji::Fallback ();
 use Encode::Alias;
 
 our $VERSION = '0.03';
 
 # aliases for -pp
 define_alias('x-sjis-emoji-docomo'     => 'x-sjis-emoji-docomo-pp');
-define_alias('x-sjis-emoji-kddi'       => 'x-sjis-emoji-kddi-pp');
+define_alias('x-sjis-emoji-kddiapp'    => 'x-sjis-emoji-kddiapp-pp');
 define_alias('x-sjis-emoji-kddiweb'    => 'x-sjis-emoji-kddiweb-pp');
-define_alias('x-sjis-emoji-softbank'   => 'x-sjis-emoji-softbank-pp');
 define_alias('x-sjis-emoji-softbank2g' => 'x-sjis-emoji-softbank2g-pp');
 define_alias('x-sjis-emoji-softbank3g' => 'x-sjis-emoji-softbank3g-pp');
 
 define_alias('x-utf8-emoji-docomo'     => 'x-utf8-emoji-docomo-pp');
-define_alias('x-utf8-emoji-kddi'       => 'x-utf8-emoji-kddi-pp');
+define_alias('x-utf8-emoji-kddiapp'    => 'x-utf8-emoji-kddiapp-pp');
 define_alias('x-utf8-emoji-kddiweb'    => 'x-utf8-emoji-kddiweb-pp');
-define_alias('x-utf8-emoji-softbank'   => 'x-utf8-emoji-softbank-pp');
 define_alias('x-utf8-emoji-softbank2g' => 'x-utf8-emoji-softbank2g-pp');
 define_alias('x-utf8-emoji-softbank3g' => 'x-utf8-emoji-softbank3g-pp');
-define_alias('x-utf8-emoji-google'     => 'x-utf8-emoji-google-pp');
-define_alias('x-utf8-emoji-unicode'    => 'x-utf8-emoji-unicode-pp');
 
 define_alias('x-sjis-e4u-docomo'       => 'x-sjis-e4u-docomo-pp');
-define_alias('x-sjis-e4u-kddi'         => 'x-sjis-e4u-kddi-pp');
+define_alias('x-sjis-e4u-kddiapp'      => 'x-sjis-e4u-kddiapp-pp');
 define_alias('x-sjis-e4u-kddiweb'      => 'x-sjis-e4u-kddiweb-pp');
-define_alias('x-sjis-e4u-softbank'     => 'x-sjis-e4u-softbank-pp');
 define_alias('x-sjis-e4u-softbank2g'   => 'x-sjis-e4u-softbank2g-pp');
 define_alias('x-sjis-e4u-softbank3g'   => 'x-sjis-e4u-softbank3g-pp');
 
 define_alias('x-utf8-e4u-docomo'       => 'x-utf8-e4u-docomo-pp');
-define_alias('x-utf8-e4u-kddi'         => 'x-utf8-e4u-kddi-pp');
+define_alias('x-utf8-e4u-kddiapp'      => 'x-utf8-e4u-kddiapp-pp');
 define_alias('x-utf8-e4u-kddiweb'      => 'x-utf8-e4u-kddiweb-pp');
-define_alias('x-utf8-e4u-softbank'     => 'x-utf8-e4u-softbank-pp');
 define_alias('x-utf8-e4u-softbank2g'   => 'x-utf8-e4u-softbank2g-pp');
 define_alias('x-utf8-e4u-softbank3g'   => 'x-utf8-e4u-softbank3g-pp');
+
 define_alias('x-utf8-e4u-google'       => 'x-utf8-e4u-google-pp');
 define_alias('x-utf8-e4u-unicode'      => 'x-utf8-e4u-unicode-pp');
 
