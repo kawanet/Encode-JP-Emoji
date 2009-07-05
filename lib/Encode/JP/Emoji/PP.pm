@@ -56,7 +56,7 @@ The last group:
     x-utf8-e4u-none-pp              x-utf8-e4u-none
     --------------------------------------------------------------------
 
-L<Encode::JP::Emoji::Encodings> implements all C<-pp> encodings above.
+L<Encode::JP::Emoji::Encoding> implements all C<-pp> encodings above.
 Use L<Encode::JP::Emoji> instead of loading this module directly.
 
 =head1 AUTHOR
@@ -65,7 +65,7 @@ Yusuke Kawasaki, L<http://www.kawa.net/>
 
 =head1 SEE ALSO
 
-L<Encode::JP::Emoji> and L<Encode::JP::Emoji::Encodings>.
+L<Encode::JP::Emoji> and L<Encode::JP::Emoji::Encoding>.
 
 =head1 COPYRIGHT
 
@@ -79,7 +79,7 @@ use warnings;
 use Encode::JP::Emoji::Encoding;
 use Encode::Alias;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 # aliases for -pp
 define_alias('x-sjis-emoji-docomo'     => 'x-sjis-emoji-docomo-pp');

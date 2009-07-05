@@ -13,9 +13,9 @@ my $UTF8_SRC  = [qw(docomo kddi kddiweb softbank google unicode)];
 
 if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
     print STDERR "Usage:\n";
-    print STDERR "* to parse local data files:\n";
+    print STDERR "*** to load local data files:\n";
     print STDERR "$0 datadir ../Unicode-Emoji-E4U/trunk/data > lib/Encode/JP/Emoji/Mapping.pm\n";
-    print STDERR "* to fetch data files from google code (default):\n";
+    print STDERR "*** to fetch data files from google code (default):\n";
     print STDERR "$0 datadir http://emoji4unicode.googlecode.com/svn/trunk/data > lib/Encode/JP/Emoji/Mapping.pm\n";
     exit;
 }
@@ -36,31 +36,18 @@ sub make_mapping_pm {
     push @$out, &make_property;
     push @$out, &make_converter;
     push @$out, &make_mixed_encoding;
-#   push @$out, &make_charnames;
     push @$out, &make_charnames_var('google', 'google');
     push @$out, "1;\n";
 
     join '' => @$out;
 }
 
-sub make_charnames {
-    my $out  = [];
-
-    foreach my $carrier (@$UTF8_SRC) {
-        my $basemap = ($carrier eq 'unicode') ? 'google' : $carrier;
-        push @$out, &make_charnames_var($basemap, $carrier);
-    }
-
-    print STDERR (scalar @$out), " charnames\n";
-    @$out;
-}
-
 sub make_property {
     my $out  = [];
 
-    foreach my $carrier (@$CP932_SRC) {
-        push @$out, &make_property_sub($carrier, $carrier, 'CP932');
-    }
+#   foreach my $carrier (@$CP932_SRC) {
+#       push @$out, &make_property_sub($carrier, $carrier, 'CP932');
+#   }
 
     foreach my $carrier (@$UTF8_SRC) {
         my $basemap = ($carrier eq 'unicode') ? 'google' : $carrier;
@@ -138,7 +125,7 @@ sub make_property_sub {
     }
 
     # sub
-	print STDERR $insub, "\n";
+    print STDERR $insub, "\n";
     push @$out, "sub ", $insub, ' { $', $invar, "; }\n";
 
     # re
@@ -244,14 +231,14 @@ sub make_mixed_encoding {
 
     my $out = [];
     
-	print STDERR "google_unicode_to_mixed_unicode\n";
+    print STDERR "google_unicode_to_mixed_unicode\n";
     push @$out, "sub google_unicode_to_mixed_unicode {\n";
     push @$out, $INDENT, "\$_[1] =~ tr\n";
     push @$out, $INDENT, "[$g2msrcjoin]\n";
     push @$out, $INDENT, "[$g2mdstjoin];\n";
     push @$out, "}\n\n";
 
-	print STDERR "mixed_unicode_to_google_unicode\n";
+    print STDERR "mixed_unicode_to_google_unicode\n";
     push @$out, "sub mixed_unicode_to_google_unicode {\n";
     push @$out, $INDENT, "\$_[1] =~ tr\n";
     push @$out, $INDENT, "[$m2gsrcjoin]\n";
@@ -262,8 +249,8 @@ sub make_mixed_encoding {
 }
 
 sub get_tr_list {
-	my $list = shift;
-	my $work = [map {+[$_, ord $_]} @$list];
+    my $list = shift;
+    my $work = [map {+[$_, ord $_]} @$list];
     foreach my $i (1 .. $#$work-1) {
         my $prev = $work->[$i-1];
         my $this = $work->[$i];
@@ -316,7 +303,7 @@ sub make_converter_sub {
 
     my $out = [];
     my $subname = join '_' => $srccarr, $srccode, 'to', $dstcarr, $dstcode;
-	print STDERR $subname, "\n";
+    print STDERR $subname, "\n";
 
     push @$out, "sub ", $subname, " {\n";
     if ($maplen == 0) {
@@ -389,7 +376,7 @@ sub make_charnames_var {
 
     my $out = [];
     my $cnvar = sprintf 'CharnamesEmoji%s' => ucfirst $srccarr;
-	print STDERR $cnvar, "\n";
+    print STDERR $cnvar, "\n";
     push @$out, 'our %', $cnvar, " = (\n";
     push @$out, $INDENT, join ', ' => @$map;
     push @$out, "\n);\n\n";
@@ -430,6 +417,28 @@ sub _find_name_ja {
         $text = $esoftbank->name_ja if $esoftbank;
         return $text if $text;
     }
+
+    # otherwise, check alternative emoji name
+    if ($docomo) {
+        $docomo =~ s/^>//;
+        my $edocomo = $e4u->docomo->find(unicode => $docomo);
+        $text = $edocomo->name_ja if $edocomo;
+        return $text if $text;
+    }
+    if ($kddi) {
+        $kddi =~ s/^>//;
+        my $ekddi = $e4u->kddi->find(unicode => $kddi);
+        $text = $ekddi->name_ja if $ekddi;
+        return $text if $text;
+    }
+    if ($softbank) {
+        $softbank =~ s/^>//;
+        my $esoftbank = $e4u->softbank->find(unicode => $softbank);
+        $text = $esoftbank->name_ja if $esoftbank;
+        return $text if $text;
+    }
+
+    undef;
 }
 
 sub join_escape_pua {

@@ -63,7 +63,7 @@ use Encode ();
 use Encode::JP::Emoji::Mapping;
 use Encode::JP::Emoji::Property;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 our @EXPORT = qw(
     FB_EMOJI_TEXT
@@ -74,9 +74,10 @@ our $TEXT_FORMAT = '[%s]';
 my $latin1 = Encode::find_encoding('latin1');
 my $utf8   = Encode::find_encoding('utf8');
 my $mixed  = Encode::find_encoding('x-utf8-e4u-mixed');
+my $check  = Encode::FB_XMLCREF();
 
 sub FB_EMOJI_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
+    my $fb = shift || $check;
     sub {
         my $code = shift;
         my $chr  = chr $code;
@@ -84,12 +85,14 @@ sub FB_EMOJI_TEXT {
             # google emoji
         } elsif ($chr =~ /\p{InEmojiAny}/) {
             # others emoji
-            my $str = $mixed->decode($utf8->encode($chr));
+            my $oct = $utf8->encode($chr, $fb);     # Mixed UTF-8 octets
+            my $str = $mixed->decode($oct, $fb);    # Google UTF-8 string
             $code = ord $str if (1 == length $str);
         }
         my $hex = sprintf '%04X' => $code;
         unless (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex}) {
-            return $latin1->encode($chr, $fb);
+            my $oct = $latin1->encode($chr, $fb);   # UTF-8 octets
+            return $utf8->decode($oct, $fb);        # UTF-8 string
         }
         my $name = $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
         sprintf $TEXT_FORMAT => $name;
