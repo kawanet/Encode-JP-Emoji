@@ -3,71 +3,83 @@ use warnings;
 use lib 't';
 require 'test-util.pl';
 use Test::More;
+use EncodeUpdate;
 use Encode;
 use Encode::JP::Emoji;
 use Encode::JP::Emoji::FB_EMOJI_TEXT;
 no utf8;    # utf-8 encoded but not flagged
 
-plan tests => 24;
+plan tests => 22;
+
+# utf8
 
 my $text;
+$text = encode('x-utf8-e4u-none-pp' => "\x{E644}", FB_EMOJI_TEXT());
+is $text, '[霧]', 'fog docomo';
+$text = encode('x-utf8-e4u-none-pp' => "\x{FE006}", FB_EMOJI_TEXT());
+is $text, '[霧]', 'fog google';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E63E}", FB_DOCOMO_TEXT();
-is $text, '[晴れ]', 'SUN FB_DOCOMO_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E488}", FB_KDDIAPP_TEXT();
-is $text, '[太陽]', 'SUN FB_KDDIAPP_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{EF60}", FB_KDDIWEB_TEXT();
-is $text, '[太陽]', 'SUN FB_KDDIWEB_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E04A}", FB_SOFTBANK_TEXT();
-is $text, '[晴れ]', 'SUN FB_SOFTBANK_TEXT';
+$text = encode('x-utf8-e4u-none-pp' => "\x{E71F}", FB_EMOJI_TEXT());
+is $text, '[腕時計]', 'watch docomo';
+$text = encode('x-utf8-e4u-none-pp' => "\x{FE01D}", FB_EMOJI_TEXT());
+is $text, '[腕時計]', 'watch google';
+$text = encode('x-utf8-e4u-none-pp' => "\x{231A}", FB_EMOJI_TEXT());
+is $text, '[腕時計]', 'watch unicode';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E6B7}", FB_DOCOMO_TEXT();
-is $text, '[soon]', 'SOON FB_DOCOMO_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE018}", FB_GOOGLE_TEXT();
-is $text, '[SOON]', 'SOON FB_GOOGLE_TEXT';
+$text = encode('x-utf8-e4u-none-pp' => "\x{E349}", FB_EMOJI_TEXT());
+is $text, '[トマト]', 'tomato softbank3g';
+$text = encode('x-utf8-e4u-none-pp' => "\x{FE055}", FB_EMOJI_TEXT());
+is $text, '[トマト]', 'tomato google';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E48A}", FB_KDDIAPP_TEXT();
-is $text, '[雪の結晶]', 'SNOWFLAKE FB_KDDIAPP_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{EF62}", FB_KDDIWEB_TEXT();
-is $text, '[雪の結晶]', 'SNOWFLAKE FB_KDDIWEB_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE00E}", FB_GOOGLE_TEXT();
-is $text, '[雪結晶]', 'SNOWFLAKE FB_GOOGLE_TEXT';
+$text = encode('x-utf8-e4u-none-pp' => "\x{E037}", FB_EMOJI_TEXT());
+is $text, '[教会]', 'church softbank3g';
+$text = encode('x-utf8-e4u-none-pp' => "\x{FE4BB}", FB_EMOJI_TEXT());
+is $text, '[教会]', 'church google';
+$text = encode('x-utf8-e4u-none-pp' => "\x{26EA}", FB_EMOJI_TEXT());
+is $text, '[教会]', 'church unicode';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E15A}", FB_SOFTBANK_TEXT();
-is $text, '[タクシー]', 'TAXI FB_SOFTBANK_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE7EF}", FB_GOOGLE_TEXT();
-is $text, '[タクシー]', 'TAXI FB_GOOGLE_TEXT';
+# sjis
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{26FA}", FB_UNICODE_TEXT();
-is $text, '[TENT]', 'TENT FB_UNICODE_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE7FB}", FB_GOOGLE_TEXT();
-is $text, '[キャンプ]', 'TENT FB_GOOGLE_TEXT';
+$text = "\xF3\x4D";
+Encode::from_to($text, 'x-sjis-e4u-kddiweb', 'x-utf8-e4u-docomo', FB_EMOJI_TEXT());
+is $text, '[夕焼け]', 'yuyake kddiweb';
 
-####
+$text = "\xF7\x87";
+Encode::from_to($text, 'x-sjis-e4u-softbank3g', 'x-utf8-e4u-docomo', FB_EMOJI_TEXT());
+is $text, '[夕焼け]', 'yuyake softbank3g';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E63E}", FB_EMOJI_TEXT();
-is $text, '[晴れ]', 'SUN FB_EMOJI_TEXT DOCOMO';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{EF60}", FB_EMOJI_TEXT();
-is $text, '[太陽]', 'SUN FB_EMOJI_TEXT KDDIWEB';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E04A}", FB_EMOJI_TEXT();
-is $text, '[晴れ]', 'SUN FB_EMOJI_TEXT SOFTBANK';
+$text = "\xF9\xE9";
+Encode::from_to($text, 'x-sjis-e4u-docomo', 'x-utf8-e4u-softbank3g', FB_EMOJI_TEXT());
+is $text, '[バナナ]', 'banana docomo';
+$text = "\xF3\xF6";
+Encode::from_to($text, 'x-sjis-e4u-kddiweb', 'x-utf8-e4u-softbank3g', FB_EMOJI_TEXT());
+is $text, '[バナナ]', 'banana kddiweb';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E6B7}", FB_EMOJI_TEXT();
-is $text, '[soon]', 'SOON FB_EMOJI_TEXT DOCOMO';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE018}", FB_EMOJI_TEXT();
-is $text, '[SOON]', 'SOON FB_EMOJI_TEXT GOOGLE';
+$text = "\xF9\x56";
+Encode::from_to($text, 'x-sjis-e4u-docomo', 'x-utf8-e4u-kddiweb', FB_EMOJI_TEXT());
+is $text, '[いす]', 'seat docomo';
+$text = "\xF7\x5F";
+Encode::from_to($text, 'x-sjis-e4u-softbank3g', 'x-utf8-e4u-kddiweb', FB_EMOJI_TEXT());
+is $text, '[いす]', 'seat softbank3g';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{EF62}", FB_EMOJI_TEXT();
-is $text, '[雪の結晶]', 'SNOWFLAKE FB_EMOJI_TEXT KDDIWEB';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE00E}", FB_EMOJI_TEXT();
-is $text, '[雪結晶]', 'SNOWFLAKE FB_EMOJI_TEXT GOOGLE';
+# fallback to docomo
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{E15A}", FB_EMOJI_TEXT();
-is $text, '[タクシー]', 'TAXI FB_EMOJI_TEXT SOFTBANK';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE7EF}", FB_EMOJI_TEXT();
-is $text, '[タクシー]', 'TAXI FB_EMOJI_TEXT GOOGLE';
+$text = "\xF8\x9F";
+Encode::from_to($text, 'x-sjis-emoji-docomo', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
+is $text, '[晴れ]', 'sun docomo';
+$text = "\xF6\x60";
+Encode::from_to($text, 'x-sjis-emoji-kddiweb', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
+is $text, '[晴れ]', 'sun kddiweb';
+$text = "\xF9\x8B";
+Encode::from_to($text, 'x-sjis-emoji-softbank3g', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
+is $text, '[晴れ]', 'sun softbank3g';
 
-$text = encode 'x-utf8-e4u-none-pp' => "\x{26FA}", FB_EMOJI_TEXT();
-is $text, '[TENT]', 'TENT FB_UNICODE_TEXT';
-$text = encode 'x-utf8-e4u-none-pp' => "\x{FE7FB}", FB_EMOJI_TEXT();
-is $text, '[キャンプ]', 'TENT FB_GOOGLE_TEXT';
+$text = "\xF9\x7D";
+Encode::from_to($text, 'x-sjis-emoji-docomo', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
+is $text, '[パスワード]', 'key docomo';
+$text = "\xF6\xF2";
+Encode::from_to($text, 'x-sjis-emoji-kddiweb', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
+is $text, '[パスワード]', 'key kddiweb';
+$text = "\xF9\x80";
+Encode::from_to($text, 'x-sjis-emoji-softbank3g', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
+is $text, '[パスワード]', 'key softbank3g';

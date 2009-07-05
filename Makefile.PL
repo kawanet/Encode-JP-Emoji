@@ -9,7 +9,7 @@ my $opt = {
     PREREQ_PM           =>  {
         'Test::More'        =>  '0',
         'Test::Harness'     =>  '3.04',
-        'Encode'            =>  '0',
+        'Encode'            =>  '0',    # 2.13 or later recommended
     },
 };
 

@@ -31,6 +31,7 @@ t/47-softbank2g.t
 t/48-mixed.t
 t/70-synopsis-emoji.t
 t/71-synopsis-fallback.t
+t/EncodeUpdate.pm
 t/docomo-table.tsv
 t/kddi-table.tsv
 t/softbank-table.tsv

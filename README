@@ -32,7 +32,7 @@ DESCRIPTION
     The first group of encodings uses carriers' private code points as
     Perl's internal string which has UTF-8 flag on.
 
-        Canonical                   Encoding    Octets Emoji    String Emoji
+        Name                        Encoding    Octets Emoji    String Emoji
         --------------------------------------------------------------------
         x-sjis-emoji-docomo         Shift_JIS   DoCoMo          DoCoMo
         x-sjis-emoji-kddiapp        Shift_JIS   KDDI            KDDI(app)
@@ -58,7 +58,7 @@ DESCRIPTION
     The second group uses Googles's private code points internaly. This
     means Google's encoding could be the interchange encoding for others.
 
-        Canonical                   Encoding    Octets Emoji    String Emoji
+        Name                        Encoding    Octets Emoji    String Emoji
         --------------------------------------------------------------------
         x-sjis-e4u-docomo           Shift_JIS   DoCoMo          Google
         x-sjis-e4u-kddiapp          Shift_JIS   KDDI            Google
@@ -78,7 +78,7 @@ DESCRIPTION
 
     The next group also uses Google's.
 
-        Canonical                   Encoding    Octets Emoji    String Emoji
+        Name                        Encoding    Octets Emoji    String Emoji
         --------------------------------------------------------------------
         x-utf8-e4u-unicode          UTF-8       Unicode Std.    Google
         x-utf8-e4u-google           UTF-8       Google          Google
@@ -88,7 +88,7 @@ DESCRIPTION
     "x-utf8-e4u-unicode" encodes the Unicode's standard code points proposed
     by emoji4unicode project.
 
-    "x-utf8-e4u-google" is just an alias to "utf8".
+    "x-utf8-e4u-google" does NO translations.
 
     "x-utf8-e4u-mixed" accepts all emojis mixed. On decoding, however,
     KDDI(app) emojis would be broken as they have conflicts with SoftBank
@@ -100,7 +100,7 @@ DESCRIPTION
     Tha last group rejects any emojis above. You would use these encodings
     with Encode::JP::Emoji::FB_EMOJI_TEXT fallback functions.
 
-        Canonical                   Encoding
+        Name                        Encoding
         --------------------------------------------------------------------
         x-sjis-emoji-none           Shift_JIS
         x-utf8-emoji-none           UTF-8

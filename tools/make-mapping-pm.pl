@@ -36,7 +36,8 @@ sub make_mapping_pm {
     push @$out, &make_property;
     push @$out, &make_converter;
     push @$out, &make_mixed_encoding;
-    push @$out, &make_charnames;
+#   push @$out, &make_charnames;
+    push @$out, &make_charnames_var('google', 'google');
     push @$out, "1;\n";
 
     join '' => @$out;

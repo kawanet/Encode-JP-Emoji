@@ -1,6 +1,6 @@
 ---
 
-Encode-JP-Emoji-0.03 (2009-07-04):
+Encode-JP-Emoji-0.04 (2009-07-05):
   - encoding lineup revised.
   - x-utf8-e4u-mixed encoding added.
   - x-*-*-kddi encoding renamed to x-*-*-kddiapp.
@@ -8,8 +8,9 @@ Encode-JP-Emoji-0.03 (2009-07-04):
   - x-*-*-softbank encoding removed. use x-*-*-softbank3g instead.
   - x-utf8-emoji-softbank2g-pp encoding added.
   - x-*-*-softbank2g decoding bug fixed.
-  - FB_EMOJI_TEXT fallback added.
-  - Encode::JP::Emoji::FB_EMOJI_GMAIL split.
+  - FB_EMOJI_TEXT fallback function unified.
+  - FB_EMOJI_GMAIL fallback function split.
+  - all tests pass on Perl 5.8.8 + Encode 2.12 with t/EncodeUpdate.pm
 
 Encode-JP-Emoji-0.02 (2009-07-01):
   - Some pods and tests added

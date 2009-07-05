@@ -10,75 +10,36 @@ Encode::JP::Emoji::FB_EMOJI_TEXT - Emoji fallback functions
     use Encode::JP::Emoji;
     use Encode::JP::Emoji::FB_EMOJI_TEXT;
 
-    # DoCoMo Shift_JIS <SJIS+F89F> octets to fallback to DoCoMo name "[晴れ]"
-    my $sun = "\xF8\x9F";
-    Encode::from_to($sun, 'x-sjis-emoji-docomo', 'x-sjis-e4u-none', FB_DOCOMO_TEXT());
+    # DoCoMo Shift_JIS <SJIS+F95B> octets fallback to "[SOON]"
+    my $soon = "\xF9\x5B";
+    Encode::from_to($soon, 'x-sjis-e4u-docomo', 'x-sjis-e4u-kddiweb', FB_EMOJI_TEXT());
 
-    # KDDI UTF-8 <U+E598> octets to fallback to Google name "[霧]"
-    my $fog = "\xEE\x96\x98";
-    Encode::from_to($fog, 'x-utf8-e4u-kddiapp', 'x-utf8-e4u-none', FB_GOOGLE_TEXT());
+    # KDDI Shift_JIS <SJIS+F7B5> octets fallback to "[霧]"
+    my $fog = "\xF7\xB5";
+    Encode::from_to($fog, 'x-sjis-e4u-kddiweb', 'x-sjis-e4u-softbank3g', FB_EMOJI_TEXT());
 
-    # SoftBank UTF-8 <U+E524> string to fallback to SoftBank name "[ハムスター]"
+    # SoftBank UTF-8 <U+E524> string fallback to "[ハムスター]"
     my $hamster = "\x{E524}";
-    my $softbank = Encode::encode('x-sjis-e4u-none', $hamster, FB_SOFTBANK_TEXT());
+    my $softbank = Encode::encode('x-sjis-e4u-none', $hamster, FB_EMOJI_TEXT());
 
-    # Google UTF-8 <U+FE1C1> octets to fallback to Google name "[クマ]"
+    # Google UTF-8 <U+FE1C1> octets fallback to "[クマ]"
     my $bear = "\xF3\xBE\x87\x81";
-    my $google = Encode::decode('x-utf8-e4u-none', $bear, FB_GOOGLE_TEXT());
+    my $google = Encode::decode('x-utf8-e4u-none', $bear, FB_EMOJI_TEXT());
 
 =head1 DESCRIPTION
 
-This module exports the following fallback functions which would be used with
-C<x-sjis-e4u-none> and C<x-utf8-e4u-none> encodings which rejects any emojis.
-
-=head2 FB_DOCOMO_TEXT()
-
-This returns emoji name defined by DoCoMo.
-Note that this accepts only DoCoMo's private emoji code points.
-
-    Encode::from_to($html, 'x-utf8-emoji-docomo', 'x-utf8-emoji-none', FB_DOCOMO_TEXT());
-
-=head2 FB_KDDIAPP_TEXT()
-
-This returns emoji name defined by KDDI.
-Note that this accepts only KDDI's private emoji code points.
-
-    Encode::from_to($html, 'x-sjis-emoji-kddiapp', 'x-sjis-emoji-none', FB_KDDIAPP_TEXT());
-
-=head2 FB_KDDIWEB_TEXT()
-
-This returns emoji name defined by KDDI.
-Note that this accepts only B<undocumented version> of KDDI's private emoji code points.
-
-    Encode::from_to($html, 'x-utf8-emoji-kddiweb', 'x-utf8-emoji-none', FB_KDDIWEB_TEXT());
-
-See L<http://subtech.g.hatena.ne.jp/miyagawa/20071112/1194865208> for more detail.
-
-=head2 FB_SOFTBANK_TEXT()
-
-This returns emoji name defined by SoftBank.
-Note that this accepts only SoftBank's private emoji code points.
-
-    Encode::from_to($html, 'x-sjis-emoji-softbank3g', 'x-sjis-emoji-none', FB_SOFTBANK_TEXT());
-
-=head2 FB_GOOGLE_TEXT()
-
-This returns emoji name defined by emoji4unicode project on Google Code.
-Note that this accepts only Google's private emoji code points.
-
-    Encode::from_to($html, 'x-utf8-e4u-google', 'x-utf8-e4u-none', FB_GOOGLE_TEXT());
-
-=head2 FB_UNICODE_TEXT()
-
-This will return character name defined on the Unicode Standard.
-Note that this accepts only emojis of standard code points.
-
-    Encode::from_to($html, 'x-utf8-e4u-unicode', 'x-utf8-e4u-none', FB_UNICODE_TEXT());
+This module exports the following fallback function.
 
 =head2 FB_EMOJI_TEXT()
 
-This accepts all emoji code points above for ease of use.
-Note that SoftBank is prior to KDDIapp in their conflicts code points.
+This returns emoji character name.
+Having conflicts with SoftBank encoding, KDDI(app) encoding is B<NOT> recommended.
+
+=head1 BUGS
+
+C<Encode.pm> 2.22 or less would face a problem with fallback function.
+Use latest version of C<Encode.pm>, or use with C<EncodeUpdate.pm>
+in C<t> test directory of the package.
 
 =head1 AUTHOR
 
@@ -100,130 +61,38 @@ use warnings;
 use base 'Exporter';
 use Encode ();
 use Encode::JP::Emoji::Mapping;
+use Encode::JP::Emoji::Property;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 our @EXPORT = qw(
-    FB_EMOJI_TEXT FB_DOCOMO_TEXT FB_KDDIAPP_TEXT FB_KDDIWEB_TEXT FB_SOFTBANK_TEXT FB_GOOGLE_TEXT FB_UNICODE_TEXT
+    FB_EMOJI_TEXT
 );
 
-our $FB_TEXT = '[%s]';
+our $TEXT_FORMAT = '[%s]';
 
-my $hex4   = '%04X';
 my $latin1 = Encode::find_encoding('latin1');
-
-sub FB_DOCOMO_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
-    sub {
-        my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
-        }
-        sprintf $FB_TEXT => $text;
-    }
-}
-
-sub FB_KDDIAPP_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
-    sub {
-        my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
-        }
-        sprintf $FB_TEXT => $text;
-    };
-}
-
-sub FB_KDDIWEB_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
-    sub {
-        my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddiweb{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddiweb{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
-        }
-        sprintf $FB_TEXT => $text;
-    };
-}
-
-sub FB_SOFTBANK_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
-    sub {
-        my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
-        }
-        sprintf $FB_TEXT => $text;
-    };
-}
-
-sub FB_GOOGLE_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
-    sub {
-        my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
-        }
-        sprintf $FB_TEXT => $text;
-    };
-}
-
-sub FB_UNICODE_TEXT {
-    my $fb = shift || Encode::FB_XMLCREF();
-    sub {
-        my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
-        }
-        sprintf $FB_TEXT => $text;
-    };
-}
+my $utf8   = Encode::find_encoding('utf8');
+my $mixed  = Encode::find_encoding('x-utf8-e4u-mixed');
 
 sub FB_EMOJI_TEXT {
     my $fb = shift || Encode::FB_XMLCREF();
     sub {
         my $code = shift;
-        my $hex  = sprintf $hex4 => $code;
-        my $text;
-        if (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
-        } elsif (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiDocomo{$hex};
-        } elsif (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddiweb{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddiweb{$hex};
-        } elsif (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiSoftbank{$hex};
-        } elsif (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiKddi{$hex};
-        } elsif (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex}) {
-            $text = $Encode::JP::Emoji::Mapping::CharnamesEmojiUnicode{$hex};
-        } else {
-            return $latin1->encode(chr $code, $fb);
+        my $chr  = chr $code;
+        if ($chr =~ /\p{InEmojiGoogle}/) {
+            # google emoji
+        } elsif ($chr =~ /\p{InEmojiAny}/) {
+            # others emoji
+            my $str = $mixed->decode($utf8->encode($chr));
+            $code = ord $str if (1 == length $str);
         }
-        sprintf $FB_TEXT => $text;
+        my $hex = sprintf '%04X' => $code;
+        unless (exists $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex}) {
+            return $latin1->encode($chr, $fb);
+        }
+        my $name = $Encode::JP::Emoji::Mapping::CharnamesEmojiGoogle{$hex};
+        sprintf $TEXT_FORMAT => $name;
     };
 }
 

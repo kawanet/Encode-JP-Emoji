@@ -34,7 +34,7 @@ This module provides encodings which support emoji picture characters.
 The first group of encodings uses carriers' private code points
 as Perl's internal string which has UTF-8 flag on.
 
-    Canonical                   Encoding    Octets Emoji    String Emoji
+    Name                        Encoding    Octets Emoji    String Emoji
     --------------------------------------------------------------------
     x-sjis-emoji-docomo         Shift_JIS   DoCoMo          DoCoMo
     x-sjis-emoji-kddiapp        Shift_JIS   KDDI            KDDI(app)
@@ -61,7 +61,7 @@ Use SoftBank(3G) encoding recommended in most cases.
 The second group uses Googles's private code points internaly.
 This means Google's encoding could be the interchange encoding for others.
 
-    Canonical                   Encoding    Octets Emoji    String Emoji
+    Name                        Encoding    Octets Emoji    String Emoji
     --------------------------------------------------------------------
     x-sjis-e4u-docomo           Shift_JIS   DoCoMo          Google
     x-sjis-e4u-kddiapp          Shift_JIS   KDDI            Google
@@ -81,7 +81,7 @@ See more detail on L<http://code.google.com/p/emoji4unicode/> about the project.
 
 The next group also uses Google's.
 
-    Canonical                   Encoding    Octets Emoji    String Emoji
+    Name                        Encoding    Octets Emoji    String Emoji
     --------------------------------------------------------------------
     x-utf8-e4u-unicode          UTF-8       Unicode Std.    Google
     x-utf8-e4u-google           UTF-8       Google          Google
@@ -91,7 +91,7 @@ The next group also uses Google's.
 C<x-utf8-e4u-unicode> encodes the Unicode's standard code points proposed
 by emoji4unicode project.
 
-C<x-utf8-e4u-google> is just an alias to C<utf8>.
+C<x-utf8-e4u-google> does B<NO> translations.
 
 C<x-utf8-e4u-mixed> accepts all emojis mixed.
 On decoding, however, KDDI(app) emojis would be broken as they have conflicts
@@ -103,7 +103,7 @@ Note that MySQL 5.4 does not support four bytes UTF-8 including Google emojis.
 Tha last group rejects any emojis above.
 You would use these encodings with L<Encode::JP::Emoji::FB_EMOJI_TEXT> fallback functions.
 
-    Canonical                   Encoding
+    Name                        Encoding
     --------------------------------------------------------------------
     x-sjis-emoji-none           Shift_JIS
     x-utf8-emoji-none           UTF-8
@@ -166,6 +166,6 @@ use strict;
 use warnings;
 use Encode::JP::Emoji::PP;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 1;

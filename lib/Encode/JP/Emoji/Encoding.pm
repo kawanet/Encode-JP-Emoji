@@ -30,7 +30,7 @@ use Encode::JP::Emoji::Mapping;
 use Carp ();
 use Encode ();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 my $ascii_encoding = Encode::find_encoding('us-ascii');
 sub sub_check {
@@ -92,6 +92,11 @@ sub byte_encoding {
 
 package Encode::JP::Emoji::Encoding::UTF8;
 use base 'Encode::JP::Emoji::Encoding';
+__PACKAGE__->Define('x-utf8-emoji-docomo-pp');
+__PACKAGE__->Define('x-utf8-emoji-kddiapp-pp');
+__PACKAGE__->Define('x-utf8-emoji-kddiweb-pp');
+__PACKAGE__->Define('x-utf8-emoji-softbank3g-pp');
+__PACKAGE__->Define('x-utf8-e4u-google-pp');
 
 sub mime_name { 'UTF-8'; }
 
@@ -226,6 +231,7 @@ __PACKAGE__->Define('x-utf8-e4u-unicode-pp');
 
 package Encode::JP::Emoji::Encoding::X_UTF8_E4U_NONE_PP;
 use base 'Encode::JP::Emoji::Encoding::UTF8';
+__PACKAGE__->Define('x-utf8-emoji-none-pp');
 __PACKAGE__->Define('x-utf8-e4u-none-pp');
 
 *after_decode  = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
@@ -233,26 +239,11 @@ __PACKAGE__->Define('x-utf8-e4u-none-pp');
 
 package Encode::JP::Emoji::Encoding::X_SJIS_E4U_NONE_PP;
 use base 'Encode::JP::Emoji::Encoding::Shift_JIS';
+__PACKAGE__->Define('x-sjis-emoji-none-pp');
 __PACKAGE__->Define('x-sjis-e4u-none-pp');
 
 *after_decode  = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
 *before_encode = \&Encode::JP::Emoji::Encoding::Util::no_emoji;
-
-# rest encodings to complete the cross-mapping matrix
-
-package Encode::JP::Emoji::Encoding::Alias;
-use Encode::Alias;
-
-define_alias('x-utf8-emoji-docomo-pp'       => 'utf8');
-define_alias('x-utf8-emoji-kddiapp-pp'      => 'utf8');
-define_alias('x-utf8-emoji-kddiweb-pp'      => 'utf8');
-# define_alias('x-utf8-emoji-softbank2g-pp' => 'utf8');
-define_alias('x-utf8-emoji-softbank3g-pp'   => 'utf8');
-
-define_alias('x-utf8-e4u-google-pp'       => 'utf8');
-
-define_alias('x-sjis-emoji-none-pp'       => 'x-sjis-e4u-none-pp');
-define_alias('x-utf8-emoji-none-pp'       => 'x-utf8-e4u-none-pp');
 
 # Utils
 

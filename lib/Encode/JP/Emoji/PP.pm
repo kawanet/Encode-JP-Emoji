@@ -79,7 +79,7 @@ use warnings;
 use Encode::JP::Emoji::Encoding;
 use Encode::Alias;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 # aliases for -pp
 define_alias('x-sjis-emoji-docomo'     => 'x-sjis-emoji-docomo-pp');

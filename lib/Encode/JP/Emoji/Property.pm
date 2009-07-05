@@ -67,7 +67,7 @@ use warnings;
 use Encode::JP::Emoji::Mapping;
 use base 'Exporter';
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 our @EXPORT = qw(
     InEmojiDoCoMo
