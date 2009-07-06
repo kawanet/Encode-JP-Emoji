@@ -1,7 +1,5 @@
 use strict;
 use warnings;
-use lib 't';
-require 'test-util.pl';
 use Test::More;
 use Encode::JP::Emoji;
 use Encode::JP::Emoji::Property;
