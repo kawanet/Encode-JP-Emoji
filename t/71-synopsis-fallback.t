@@ -38,3 +38,5 @@ is($soon, $exp1, 'soon - docomo sjis - sjis');
 is($fog, $exp2, 'fog - kddi utf8 - utf8');
 is($softbank, $exp3, 'hamster - softbank utf8 - sjis');
 is(encode_utf8($google), $exp4, 'bear - google utf8 - utf8');
+
+# Ｔｈｉｓ　ｆｉｌｅ　ｗａｓ　ｗｒｉｔｔｅｎ　ｉｎ　ＵＴＦ－８

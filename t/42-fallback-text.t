@@ -82,3 +82,5 @@ is $text, '[パスワード]', 'key kddiweb';
 $text = "\xF9\x80";
 Encode::from_to($text, 'x-sjis-emoji-softbank3g', 'x-utf8-emoji-none', FB_EMOJI_TEXT());
 is $text, '[パスワード]', 'key softbank3g';
+
+# Ｔｈｉｓ　ｆｉｌｅ　ｗａｓ　ｗｒｉｔｔｅｎ　ｉｎ　ＵＴＦ－８
