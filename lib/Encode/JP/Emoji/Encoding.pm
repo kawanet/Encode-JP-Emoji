@@ -30,7 +30,7 @@ use Encode::JP::Emoji::Mapping;
 use Carp ();
 use Encode ();
 
-our $VERSION = '0.04';
+our $VERSION = '0.06';
 
 my $ascii_encoding = Encode::find_encoding('us-ascii');
 sub sub_check {
@@ -42,15 +42,21 @@ sub sub_check {
     }
 }
 
+sub no_sub_check {
+    my $check = $_[1];
+    $check;
+}
+
 sub decode {
     my ($self, $octets, $check) = @_;
     return undef unless defined $octets;
     $check ||=0;
     my $subcheck = $self->sub_check($check);
+    my $nosubcheck = $self->no_sub_check($check);
     my $copy = $octets if $check and !($check & Encode::LEAVE_SRC());
     $octets .= '' if ref $octets; # stringify;
     $self->before_decode($octets, $subcheck);
-    my $string = $self->byte_encoding->decode($octets, $check);
+    my $string = $self->byte_encoding->decode($octets, $nosubcheck);
     $self->after_decode($string, $subcheck);
     $_[1] = $copy if $check and !($check & Encode::LEAVE_SRC());
     $string;
@@ -61,10 +67,11 @@ sub encode {
     return undef unless defined $string;
     $check ||=0;
     my $subcheck = $self->sub_check($check);
+    my $nosubcheck = $self->no_sub_check($check);
     my $copy = $string if $check and !($check & Encode::LEAVE_SRC());
     $string .= '' if ref $string; # stringify;
     $self->before_encode($string, $subcheck);
-    my $octets = $self->byte_encoding->encode($string, $check);
+    my $octets = $self->byte_encoding->encode($string, $nosubcheck);
     $self->after_encode($octets, $subcheck);
     $_[1] = $copy if $check and !($check & Encode::LEAVE_SRC());
     $octets;
@@ -103,6 +110,12 @@ sub mime_name { 'UTF-8'; }
 my $utf8_encoding = Encode::find_encoding('UTF-8');
 sub byte_encoding {
     $utf8_encoding;
+}
+
+sub no_sub_check {
+    my $check = $_[1];
+    return 0 if ref $check;
+    $check;
 }
 
 # DoCoMo
@@ -337,7 +350,6 @@ sub unescape_vodafone {
     push @$buf, '';
     join "\x0F" => @$buf;
 }
-
 
 sub no_emoji {
     my $check = $_[2] || sub {};

@@ -13,6 +13,7 @@ Encode::JP::Emoji::Property - Emoji named character properties
     /\p{InEmojiSoftBank}/;
     /\p{InEmojiUnicode}/;
     /\p{InEmojiGoogle}/;
+    /\p{InEmojiMixed}/;
     /\p{InEmojiAny}/;
 
 =head1 DESCRIPTION
@@ -34,6 +35,10 @@ This matches B<undocumented version> of KDDI's private emoji code points: C<U+EC
 =head2 \p{InEmojiSoftBank}
 
 This matches SoftBank's private emoji code points: C<U+E001> ... C<U+E53E>.
+
+=head2 \p{InEmojiMixed}
+
+This matches emoji code points of all three carriers above.
 
 =head2 \p{InEmojiGoogle}
 
@@ -57,7 +62,7 @@ L<Encode::JP::Emoji> and L<perlunicode>
 
 =head1 COPYRIGHT
 
-Copyright 2009 Yusuke Kawasaki, all rights reserved.
+Copyright 2009-2010 Yusuke Kawasaki, all rights reserved.
 
 =cut
 
@@ -67,7 +72,7 @@ use warnings;
 use Encode::JP::Emoji::Mapping;
 use base 'Exporter';
 
-our $VERSION = '0.04';
+our $VERSION = '0.60';
 
 our @EXPORT = qw(
     InEmojiDoCoMo
@@ -76,6 +81,7 @@ our @EXPORT = qw(
     InEmojiSoftBank
     InEmojiUnicode
     InEmojiGoogle
+    InEmojiMixed
     InEmojiAny
 );
 
@@ -85,6 +91,7 @@ our @EXPORT = qw(
 *InEmojiSoftBank = \&Encode::JP::Emoji::Mapping::InEmojiSoftbankUnicode;
 *InEmojiUnicode  = \&Encode::JP::Emoji::Mapping::InEmojiUnicodeUnicode;
 *InEmojiGoogle   = \&Encode::JP::Emoji::Mapping::InEmojiGoogleUnicode;
+*InEmojiMixed    = \&Encode::JP::Emoji::Mapping::InEmojiMixedUnicode;
 
 sub InEmojiAny { return <<"EOT"; }
 +Encode::JP::Emoji::Property::InEmojiDoCoMo

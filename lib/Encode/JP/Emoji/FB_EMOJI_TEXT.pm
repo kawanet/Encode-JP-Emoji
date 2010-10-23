@@ -73,6 +73,7 @@ our $TEXT_FORMAT = '[%s]';
 
 my $ascii  = Encode::find_encoding('us-ascii');
 my $utf8   = Encode::find_encoding('utf8');
+my $stand  = Encode::find_encoding('x-utf8-e4u-unicode');
 my $mixed  = Encode::find_encoding('x-utf8-e4u-mixed');
 my $check  = Encode::FB_XMLCREF();
 
@@ -85,7 +86,12 @@ sub FB_EMOJI_TEXT {
         if ($chr =~ /\p{InEmojiGoogle}/) {
             # google emoji
             $gcode = $code;
-        } elsif ($chr =~ /\p{InEmojiAny}/) {
+        } elsif ($chr =~ /\p{InEmojiUnicode}/) {
+            # unicode emoji
+            my $moct = $utf8->encode(chr $code, $fb);   # Mixed UTF-8 octets
+            my $gstr = $stand->decode($moct, $fb);      # Standard UTF-8 string
+            $gcode = ord $gstr if (1 == length $gstr);
+        } elsif ($chr =~ /\p{InEmojiMixed}/) {
             # others emoji
             my $moct = $utf8->encode(chr $code, $fb);   # Mixed UTF-8 octets
             my $gstr = $mixed->decode($moct, $fb);      # Google UTF-8 string
