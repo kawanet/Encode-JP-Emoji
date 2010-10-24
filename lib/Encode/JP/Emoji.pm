@@ -88,17 +88,17 @@ The next group also uses Google's.
     x-utf8-e4u-mixed            UTF-8       (mixed)         Google
     --------------------------------------------------------------------
 
-C<x-utf8-e4u-unicode> encodes the Unicode's standard code points proposed
-by emoji4unicode project.
+C<x-utf8-e4u-unicode> encodes the Unicode 6.0 emojis.
 
-C<x-utf8-e4u-google> does B<NO> translations.
+C<x-utf8-e4u-google> does B<NO> translations and exists only for useful.
 
-C<x-utf8-e4u-mixed> accepts all emojis mixed.
+C<x-utf8-e4u-mixed> accepts all emojis of three mobile carriers mixed.
 On decoding, however, KDDI(app) emojis would be broken as they have conflicts
 with SoftBank emojis. So B<DO NOT> use KDDI(app) with this.
 On encoding, this replaces Google emojis to others definitively.
 This encoding is friendly for L<Encode::JP::Mobile> and MySQL 5.4.
-Note that MySQL 5.4 does not support four bytes UTF-8 including Google emojis.
+Note that MySQL before 5.5.3 does not support four bytes UTF-8 including
+both Google and Unicode Standard emojis.
 
 Tha last group rejects any emojis above.
 You would use these encodings with L<Encode::JP::Emoji::FB_EMOJI_TEXT> fallback functions.
@@ -157,7 +157,7 @@ L<Encode> and L<Unicode::Emoji::E4U>
 
 =head1 COPYRIGHT
 
-Copyright 2009 Yusuke Kawasaki, all rights reserved.
+Copyright 2009-2010 Yusuke Kawasaki, all rights reserved.
 
 =cut
 
@@ -166,6 +166,6 @@ use strict;
 use warnings;
 use Encode::JP::Emoji::PP;
 
-our $VERSION = '0.05';
+our $VERSION = '0.60';
 
 1;

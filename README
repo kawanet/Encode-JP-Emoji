@@ -85,17 +85,17 @@ DESCRIPTION
         x-utf8-e4u-mixed            UTF-8       (mixed)         Google
         --------------------------------------------------------------------
 
-    "x-utf8-e4u-unicode" encodes the Unicode's standard code points proposed
-    by emoji4unicode project.
+    "x-utf8-e4u-unicode" encodes the Unicode 6.0 emojis.
 
-    "x-utf8-e4u-google" does NO translations.
+    "x-utf8-e4u-google" does NO translations and exists only for useful.
 
-    "x-utf8-e4u-mixed" accepts all emojis mixed. On decoding, however,
-    KDDI(app) emojis would be broken as they have conflicts with SoftBank
-    emojis. So DO NOT use KDDI(app) with this. On encoding, this replaces
-    Google emojis to others definitively. This encoding is friendly for
-    Encode::JP::Mobile and MySQL 5.4. Note that MySQL 5.4 does not support
-    four bytes UTF-8 including Google emojis.
+    "x-utf8-e4u-mixed" accepts all emojis of three mobile carriers mixed. On
+    decoding, however, KDDI(app) emojis would be broken as they have
+    conflicts with SoftBank emojis. So DO NOT use KDDI(app) with this. On
+    encoding, this replaces Google emojis to others definitively. This
+    encoding is friendly for Encode::JP::Mobile and MySQL 5.4. Note that
+    MySQL before 5.5.3 does not support four bytes UTF-8 including both
+    Google and Unicode Standard emojis.
 
     Tha last group rejects any emojis above. You would use these encodings
     with Encode::JP::Emoji::FB_EMOJI_TEXT fallback functions.
@@ -146,5 +146,5 @@ SEE ALSO
     Encode and Unicode::Emoji::E4U
 
 COPYRIGHT
-    Copyright 2009 Yusuke Kawasaki, all rights reserved.
+    Copyright 2009-2010 Yusuke Kawasaki, all rights reserved.
 

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Encode-JP-Emoji
-version:            0.05
+version:            0.60
 abstract:           ~
 author:  []
 license:            apache
@@ -17,7 +17,7 @@ no_index:
     directory:
         - t
         - inc
-generated_by:       ExtUtils::MakeMaker version 6.52
+generated_by:       ExtUtils::MakeMaker version 6.54
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4

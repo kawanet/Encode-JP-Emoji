@@ -17,7 +17,7 @@ L<Encode::JP::Emoji>
 
 =head1 COPYRIGHT
 
-Copyright 2009 Yusuke Kawasaki, all rights reserved.
+Copyright 2009-2010 Yusuke Kawasaki, all rights reserved.
 
 =cut
 
@@ -30,7 +30,7 @@ use Encode::JP::Emoji::Mapping;
 use Carp ();
 use Encode ();
 
-our $VERSION = '0.06';
+our $VERSION = '0.60';
 
 my $ascii_encoding = Encode::find_encoding('us-ascii');
 sub sub_check {

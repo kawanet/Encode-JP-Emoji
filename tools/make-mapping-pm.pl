@@ -10,6 +10,7 @@ use Unicode::Emoji::E4U;
 my $INDENT = '    ';
 my $CP932_SRC = [qw(docomo kddi kddiweb softbank)];
 my $UTF8_SRC  = [qw(docomo kddi kddiweb softbank google unicode)];
+my $RE_TESTS  = qr/[\x{FE000}\x{FE4E5}\x{FE4E6}\x{FE82E}\x{FE82F}\x{FEB44}\x{FEB63}]/;
 
 if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
     print STDERR "Usage:\n";
@@ -21,7 +22,12 @@ if (scalar @ARGV == 1 && $ARGV[0] eq '-h') {
 }
 
 my %opt = @ARGV;
+# verbose output
 $opt{verbose} = 1 unless exists $opt{verbose};
+# digest output for testing
+$opt{digests} = 0 unless exists $opt{digests};
+# more Unicode Stdard mappings
+$opt{morestd} = 0 unless exists $opt{morestd};
 my $e4u = Unicode::Emoji::E4U->new(%opt);
 
 sub main {
@@ -30,11 +36,19 @@ sub main {
 
 sub make_mapping_pm {
     my $out  = [];
+    
+    my($day, $mon, $year) = (localtime)[3..5];
+    my $date = sprintf('%04d%02d%02d', $year+1900, $mon+1, $day);
 
     push @$out, <DATA>;
     push @$out, "\n";
+    push @$out, "our \$VERSION = '$Unicode::Emoji::E4U::VERSION.$date';\n";
+    push @$out, "\n";
     push @$out, &make_property;
-    push @$out, &make_converter;
+    push @$out, &make_converter_carrier_cp932;
+    push @$out, &make_converter_carrier_unicode;
+    push @$out, &make_converter_unicode_unicode if $opt{morestd};
+    push @$out, &make_converter_google_unicode;
     push @$out, &make_mixed_encoding;
     push @$out, &make_charnames_var('google', 'google');
     push @$out, "1;\n";
@@ -42,39 +56,100 @@ sub make_mapping_pm {
     join '' => @$out;
 }
 
+# InEmojiDocomoUnicode
+# InEmojiKddiUnicode
+# InEmojiKddiwebUnicode
+# InEmojiSoftbankUnicode
+# InEmojiGoogleUnicode
+# InEmojiUnicodeUnicode
+
 sub make_property {
     my $out  = [];
-
-#   foreach my $carrier (@$CP932_SRC) {
-#       push @$out, &make_property_sub($carrier, $carrier, 'CP932');
-#   }
-
     foreach my $carrier (@$UTF8_SRC) {
         my $basemap = ($carrier eq 'unicode') ? 'google' : $carrier;
         push @$out, &make_property_sub($basemap, $carrier, 'Unicode');
     }
-
     print STDERR (scalar @$out), " properties\n";
     @$out;
 }
 
-sub make_converter {
-    my $out  = [];
+# docomo_cp932_to_docomo_unicode
+# docomo_unicode_to_docomo_cp932
+# kddi_cp932_to_kddi_unicode
+# kddi_unicode_to_kddi_cp932
+# kddiweb_cp932_to_kddiweb_unicode
+# kddiweb_unicode_to_kddiweb_cp932
+# softbank_cp932_to_softbank_unicode
+# softbank_unicode_to_softbank_cp932
 
+sub make_converter_carrier_cp932 {
+    my $out  = [];
     foreach my $carrier (@$CP932_SRC) {
         push @$out, &make_converter_sub($carrier, $carrier, 'cp932',   $carrier, 'unicode');
         push @$out, &make_converter_sub($carrier, $carrier, 'unicode', $carrier, 'cp932');
     }
+    print STDERR (scalar @$out), " converters\n";
+    @$out;
+}
+
+# docomo_cp932_to_google_unicode
+# google_unicode_to_docomo_cp932
+# kddi_cp932_to_google_unicode
+# google_unicode_to_kddi_cp932
+# kddiweb_cp932_to_google_unicode
+# google_unicode_to_kddiweb_cp932
+# softbank_cp932_to_google_unicode
+# google_unicode_to_softbank_cp932
+    
+sub make_converter_carrier_unicode {
+    my $out  = [];
     foreach my $carrier (@$CP932_SRC) {
         push @$out, &make_converter_sub('google', $carrier, 'cp932',   'google', 'unicode');
         push @$out, &make_converter_sub('google', 'google', 'unicode', $carrier, 'cp932');
     }
+    print STDERR (scalar @$out), " converters\n";
+    @$out;
+}
+
+# docomo_unicode_to_unicode_unicode
+# unicode_unicode_to_docomo_unicode
+# kddi_unicode_to_unicode_unicode
+# unicode_unicode_to_kddi_unicode
+# kddiweb_unicode_to_unicode_unicode
+# unicode_unicode_to_kddiweb_unicode
+# softbank_unicode_to_unicode_unicode
+# unicode_unicode_to_softbank_unicode
+
+sub make_converter_unicode_unicode {
+    my $out  = [];
+    foreach my $carrier (@$UTF8_SRC) {
+        next if ($carrier eq 'google');     # skip google to unicode converter
+        next if ($carrier eq 'unicode');    # skip unicode to unicode converter
+        push @$out, &make_converter_sub('google', $carrier, 'unicode', 'unicode', 'unicode');
+        push @$out, &make_converter_sub('google', 'unicode', 'unicode', $carrier, 'unicode');
+    }
+    print STDERR (scalar @$out), " converters\n";
+    @$out;
+}
+
+# docomo_unicode_to_google_unicode
+# google_unicode_to_docomo_unicode
+# kddi_unicode_to_google_unicode
+# google_unicode_to_kddi_unicode
+# kddiweb_unicode_to_google_unicode
+# google_unicode_to_kddiweb_unicode
+# softbank_unicode_to_google_unicode
+# google_unicode_to_softbank_unicode
+# unicode_unicode_to_google_unicode
+# google_unicode_to_unicode_unicode
+
+sub make_converter_google_unicode {
+    my $out  = [];
     foreach my $carrier (@$UTF8_SRC) {
         next if ($carrier eq 'google');     # skip google to google converter
         push @$out, &make_converter_sub('google', $carrier, 'unicode', 'google', 'unicode');
         push @$out, &make_converter_sub('google', 'google', 'unicode', $carrier, 'unicode');
-    }
-
+    }    
     print STDERR (scalar @$out), " converters\n";
     @$out;
 }
@@ -93,12 +168,33 @@ sub make_property_sub {
     $list = [grep {defined $_->$srcx->$srcs} @$list];
     $list = [grep {! $_->$srcx->is_alt} @$list];
 
-    # single char or more chars
-    my $longlist = [grep {length $_->$srcx->$srcs > 1} @$list];
-    $list = [grep {length $_->$srcx->$srcs == 1} @$list];
+    # only sun (for test use)
+    if ($opt{digests} && $basemap eq 'google') {
+        $list = [grep {$_->google_emoji && $_->google_emoji->unicode_string =~ $RE_TESTS} @$list];
+    }
+    
+    # U+1F1E6 REGIONAL INDICATOR SYMBOL LETTER A etc.
+    if ($basemap eq 'google') {
+        $list = [grep {$_->google_emoji} @$list];
+    }
+    
+    my $srclist = [map {$_->$srcx->$srcs} @$list];
+    my $out     = [];
+    push @$out, get_regexp_sub($srccarr, $suffix, $srclist);
+    join_escape_nonascii(@$out);
+}
 
+sub get_regexp_sub {
+    my $srccarr = shift;
+    my $suffix  = shift;
+    my $srclist = shift;
+    
     # sort by source
-    $list = [sort {$a->$srcx->$srcs cmp $b->$srcx->$srcs} @$list];
+    $srclist = [sort {$a cmp $b} @$srclist];
+    # 1 character
+    my $shortlist = [grep {1 == length} @$srclist];
+    # 2 or more characters
+    my $longlist  = [grep {1 <  length} @$srclist];
 
     my $out = [];
     my $invar = sprintf 'InEmoji%s%s' => ucfirst $srccarr, $suffix;
@@ -107,7 +203,7 @@ sub make_property_sub {
 
     # in
     {
-        my @insrc = map {ord $_->$srcx->$srcs} @$list;
+        my @insrc = map {ord $_} @$shortlist;
         my $first = $insrc[0];
         my $prev = $first - 1;
         my $inlist = [];
@@ -132,21 +228,19 @@ sub make_property_sub {
     {
         my $relist = [];
         push @$relist, '\p{'.$insub.'}';
-        my $longchar = [map {$_->$srcx->$srcs} @$longlist];
-        my $list2nd = {map {(/^.(.*)$/)[0] => 1} @$longchar};
-        if (keys %$list2nd == 1) {
-            # first characters
-            my $list1st = [map {(/^(.)/)[0]} @$longchar];
-            s/([\x00-\x7F])/sprintf '\x%02X' => ord $1/e foreach @$list1st;
-            my $join1st = join '' => @$list1st;
-
-            # second character
-            my $chr2nd = (keys %$list2nd)[0];
-            $chr2nd =~ s/([\x00-\x7F])/sprintf '\x%02X' => ord $1/e;
-
-            push @$relist, '['.$join1st.']'.$chr2nd;
-        } else {
-            push @$relist, $_->$srcx->$srcs foreach @$longlist;
+        my $hash2nd = {map {(/^.(.*)$/)[0] => 1} @$longlist};
+        my $list2nd = [sort keys %$hash2nd];
+        foreach my $chr2nd (@$list2nd) {
+            my $listmat = [grep {/\Q$chr2nd\E$/} @$longlist];
+            $chr2nd =~ s/([\x00-\x7F])/sprintf('\x%02X' => ord $1)/e;
+            if (scalar @$listmat < 3) {
+                push @$relist, @$listmat;
+            } else {
+                my $list1st = [map {(/^(.)/)[0]} @$listmat];
+                s/([\x00-\x7F])/sprintf('\x%02X' => ord $1)/e foreach @$list1st;
+                my $join1st = join '' => @$list1st;
+                push @$relist, '['.$join1st.']'.$chr2nd;
+            }
         }
         my $rejoin = join '|' => @$relist;
         push @$out, 'our $', $revar, ' = qr/(?:', $rejoin, ')/mo;';
@@ -154,8 +248,11 @@ sub make_property_sub {
     }
 
     push @$out, "\n";
-    join_escape_nonascii(@$out);
+    @$out;
 }
+
+# google_unicode_to_mixed_unicode
+# mixed_unicode_to_google_unicode
 
 sub make_mixed_encoding {
     my $basemap = shift;
@@ -176,74 +273,69 @@ sub make_mixed_encoding {
     foreach my $e (@$list) {
         next unless $e->google_emoji;
         my $google = $e->google_emoji->unicode_string;
+        # only sun (for test use)
+        if ($opt{digests}) {
+            next unless ($google =~ $RE_TESTS);
+        }
         my $g_alt = $e->google_emoji->is_alt;
         if ($e->unicode_emoji && ! $e->unicode_emoji->is_alt) {
             my $unicode = $e->unicode_emoji->unicode_string;
-            if (defined $unicode && 1 == length $unicode) {
+            if (defined $unicode) {
                 $unicode2google->{$unicode} = $google;
                 $google2unicode->{$google}  = $unicode unless $g_alt;
             }
         }
         if ($e->kddi_emoji && ! $e->kddi_emoji->is_alt) {
             my $kddi = $e->kddi_emoji->unicode_string;
-            if (defined $kddi && 1 == length $kddi) {
+            if (defined $kddi) {
                 $kddi2google->{$kddi}   = $google;
                 $google2kddi->{$google} = $kddi unless $g_alt;
             }
         }
         if ($e->kddiweb_emoji && ! $e->kddiweb_emoji->is_alt) {
             my $kddiweb = $e->kddiweb_emoji->unicode_string;
-            if (defined $kddiweb && 1 == length $kddiweb) {
+            if (defined $kddiweb) {
                 $kddiweb2google->{$kddiweb} = $google;
                 $google2kddiweb->{$google}  = $kddiweb unless $g_alt;
             }
         }
         if ($e->softbank_emoji && ! $e->softbank_emoji->is_alt) {
             my $softbank = $e->softbank_emoji->unicode_string;
-            if (defined $softbank && 1 == length $softbank) {
+            if (defined $softbank) {
                 $softbank2google->{$softbank} = $google;
                 $google2softbank->{$google}   = $softbank unless $g_alt;
             }
         }
         if ($e->docomo_emoji && ! $e->docomo_emoji->is_alt) {
             my $docomo = $e->docomo_emoji->unicode_string;
-            if (defined $docomo && 1 == length $docomo) {
+            if (defined $docomo) {
                 $docomo2google->{$docomo} = $google;
                 $google2docomo->{$google} = $docomo unless $g_alt;
             }
         }
     }
 
-    my $mixed2google = {%$unicode2google, %$kddi2google, 
-        %$softbank2google, %$kddiweb2google, %$docomo2google};
-    my $google2mixed = {%$google2unicode, %$google2kddi, 
-        %$google2softbank, %$google2kddiweb, %$google2docomo};
-
-    my $g2msrclist = [sort {$a cmp $b} keys %$google2mixed];
-    my $m2gsrclist = [sort {$a cmp $b} keys %$mixed2google];
-    my $g2mdstlist = [map {$google2mixed->{$_}} @$g2msrclist];
-    my $m2gdstlist = [map {$mixed2google->{$_}} @$m2gsrclist];
-
-    my $g2msrcjoin = get_tr_list($g2msrclist);
-    my $g2mdstjoin = join '' => @$g2mdstlist;
-    my $m2gsrcjoin = get_tr_list($m2gsrclist);
-    my $m2gdstjoin = join '' => @$m2gdstlist;
-
     my $out = [];
-    
-    print STDERR "google_unicode_to_mixed_unicode\n";
-    push @$out, "sub google_unicode_to_mixed_unicode {\n";
-    push @$out, $INDENT, "\$_[1] =~ tr\n";
-    push @$out, $INDENT, "[$g2msrcjoin]\n";
-    push @$out, $INDENT, "[$g2mdstjoin];\n";
-    push @$out, "}\n\n";
 
-    print STDERR "mixed_unicode_to_google_unicode\n";
-    push @$out, "sub mixed_unicode_to_google_unicode {\n";
-    push @$out, $INDENT, "\$_[1] =~ tr\n";
-    push @$out, $INDENT, "[$m2gsrcjoin]\n";
-    push @$out, $INDENT, "[$m2gdstjoin];\n";
-    push @$out, "}\n\n";
+    my $mixed2google  = {%$kddi2google, %$softbank2google, %$kddiweb2google, %$docomo2google};
+    my $google2mixed  = {%$google2kddi, %$google2softbank, %$google2kddiweb, %$google2docomo};
+
+    my $mixedlist = [keys %$mixed2google];
+    push @$out, get_regexp_sub('mixed', 'Unicode', $mixedlist);
+
+    push @$out, get_mapping_sub('google',  'google_unicode_to_mixed_unicode',  $google2mixed);
+    push @$out, get_mapping_sub('mixed',   'mixed_unicode_to_google_unicode',  $mixed2google);
+    
+    if ($opt{morestd}) {
+        # EMOJI COMPATIBILITY SYMBOLs are missing unfortunately
+        my $mixed2unilist = [grep {$google2unicode->{$mixed2google->{$_}}} keys %$mixed2google];
+        my $mixed2unicode = {map {$_ => $google2unicode->{$mixed2google->{$_}}} @$mixed2unilist};
+        my $uni2mixedlist = [grep {$google2unicode->{$_}} keys %$google2mixed];
+        my $unicode2mixed = {map {$google2unicode->{$_} => $google2mixed->{$_}} @$uni2mixedlist};
+        
+        push @$out, get_mapping_sub('unicode', 'unicode_unicode_to_mixed_unicode', $unicode2mixed);
+        push @$out, get_mapping_sub('mixed',   'mixed_unicode_to_unicode_unicode', $mixed2unicode);
+    }
 
     join_escape_nonascii(@$out);
 }
@@ -288,21 +380,39 @@ sub make_converter_sub {
     $list = [grep {defined $_->$dstx->$dsts} @$list];
 
     # only sun (for test use)
-##  $list = [grep {$_->$srcx->$srcs eq "\x{FE000}" || $_->$dstx->$dsts eq "\x{FE000}"} @$list];
+    if ($opt{digests}) {
+        if ($basemap eq 'google') {
+            $list = [grep {$_->google_emoji->unicode_string =~ $RE_TESTS} @$list];
+        } else {
+            my $name = $srccarr;
+            $name = 'kddi' if ($srccarr eq 'kddiweb');
+            $list = [grep {$e4u->google->find($name => $_->unicode)->google_emoji->unicode_string =~ $RE_TESTS} @$list];
+        }
+    }
 
     # sort by source
     $list = [sort {$a->$srcx->$srcs cmp $b->$srcx->$srcs} @$list];
 
-    my $changed = [grep {$_->$srcx->$srcs ne $_->$dstx->$dsts} @$list];
-    my $srcjoin = join '' => map {$_->$srcx->$srcs} @$changed;
-    my $dstjoin = join '' => map {$_->$dstx->$dsts} @$changed;
+    # skip through
+    $list = [grep {$_->$srcx->$srcs ne $_->$dstx->$dsts} @$list];
+    
+    my $subname = join '_' => $srccarr, $srccode, 'to', $dstcarr, $dstcode;
+    my $maphash = {map {$_->$srcx->$srcs => $_->$dstx->$dsts} @$list};
+    my $out     = [];
+    push @$out, get_mapping_sub($srccarr, $subname, $maphash);
+    join_escape_nonascii(@$out);
+}
 
-    my $maplen = scalar @$changed;
-    my $srclen = length $srcjoin;
-    my $dstlen = length $dstjoin;
+sub get_mapping_sub {
+    my $srccarr = shift;
+    my $subname = shift;
+    my $maphash = shift;
+
+    my $maplen = scalar keys %$maphash;
+    my $srclen = length join '' => keys %$maphash;
+    my $dstlen = length join '' => values %$maphash;
 
     my $out = [];
-    my $subname = join '_' => $srccarr, $srccode, 'to', $dstcarr, $dstcode;
     print STDERR $subname, "\n";
 
     push @$out, "sub ", $subname, " {\n";
@@ -310,12 +420,11 @@ sub make_converter_sub {
         # no need to translate
         push @$out, $INDENT, "# through\n";
     } elsif ($maplen == $srclen && $maplen == $dstlen) {
-        # join contiguous characters
-        my $srclist  = [map {$_->$srcx->$srcs} @$changed];
-        my $dstlist  = [map {$_->$dstx->$dsts} @$changed];
-        $srcjoin = get_tr_list($srclist);
-        $dstjoin = get_tr_list($dstlist);
         # 1:1 translate (tr/// would be 20-50% faster than s///)
+        my $srclist  = [sort keys %$maphash];
+        my $dstlist  = [map {$maphash->{$_}} @$srclist];
+        my $srcjoin = get_tr_list($srclist);
+        my $dstjoin = get_tr_list($dstlist);
         push @$out, $INDENT, "\$_[1] =~ tr\n";
         push @$out, $INDENT, "[$srcjoin]\n";
         push @$out, $INDENT, "[$dstjoin];\n";
@@ -323,9 +432,16 @@ sub make_converter_sub {
         # N:M translate
         my $revar  = sprintf 'ReEmoji%sUnicode' => ucfirst $srccarr;
         my $mapvar = 'map_'. $subname;
+        my $c      = 0;
+        my $work   = [];
+        foreach my $src (sort keys %$maphash) {
+            my $split = $c++ % 3 ? " " : "\n";
+            my $txt = sprintf '%s"%s"=>"%s"' => $split, $src, $maphash->{$src};
+            push @$work, $txt;
+        }
         my $tmp = [];
-        push @$tmp, 'our %', $mapvar, " = (\n";
-        push @$tmp, $INDENT, join ', ' => map {sprintf '"%s"=>"%s"' => $_->$srcx->$srcs, $_->$dstx->$dsts} @$list;
+        push @$tmp, 'our %', $mapvar, " = (";
+        push @$tmp, join ',' => @$work;
         push @$tmp, "\n);\n\n";
         unshift @$out, join '' => @$tmp;
 
@@ -338,8 +454,10 @@ sub make_converter_sub {
         push @$out, $INDENT, "}egomx;\n";
     }
     push @$out, "}\n\n";
-    join_escape_nonascii(@$out);
+    @$out;
 }
+
+# CharnamesEmojiGoogle
 
 sub make_charnames_var {
     my $basemap = shift;
@@ -351,10 +469,15 @@ sub make_charnames_var {
     $list = [grep {$_->$srcx && defined $_->$srcx->$srcs} @$list];
     $list = [sort {$a->$srcx->$srcs cmp $b->$srcx->$srcs} @$list];
 
+    my $c   = 0;
     my $map = [];
     foreach my $e (@$list) {
         my $str = $e->$srcx->$srcs;
         next if (length $str > 1);
+        # only sun (for test use)
+        if ($opt{digests}) {
+            next unless ($str =~ $RE_TESTS);
+        }
         my $hex = sprintf '%04X' => ord $str;
         my $name;
         if ($srccarr eq 'unicode') {
@@ -370,15 +493,16 @@ sub make_charnames_var {
         }
         next unless defined $name;
         $name =~ s/([\'\"\$\@\%\&\*\\])/\\$1/g;
-        my $txt = sprintf '"%s"=>"%s"' => $hex, $name;
+        my $split = $c++ % 4 ? " " : "\n";
+        my $txt = sprintf '%s"%s"=>"%s"' => $split, $hex, $name;
         push @$map, $txt;
     }
 
     my $out = [];
     my $cnvar = sprintf 'CharnamesEmoji%s' => ucfirst $srccarr;
     print STDERR $cnvar, "\n";
-    push @$out, 'our %', $cnvar, " = (\n";
-    push @$out, $INDENT, join ', ' => @$map;
+    push @$out, 'our %', $cnvar, " = (";
+    push @$out, join ', ' => @$map;
     push @$out, "\n);\n\n";
     join_escape_pua(@$out);
 }

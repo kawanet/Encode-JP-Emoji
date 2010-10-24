@@ -51,7 +51,7 @@ L<Encode::JP::Emoji>
 
 =head1 COPYRIGHT
 
-Copyright 2009 Yusuke Kawasaki, all rights reserved.
+Copyright 2009-2010 Yusuke Kawasaki, all rights reserved.
 
 =cut
 
@@ -63,7 +63,7 @@ use Encode ();
 use Encode::JP::Emoji::Mapping;
 use Encode::JP::Emoji::Property;
 
-our $VERSION = '0.05';
+our $VERSION = '0.60';
 
 our @EXPORT = qw(
     FB_EMOJI_TEXT

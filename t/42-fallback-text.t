@@ -8,7 +8,7 @@ use Encode::JP::Emoji;
 use Encode::JP::Emoji::FB_EMOJI_TEXT;
 no utf8;    # utf-8 encoded but not flagged
 
-plan tests => 22;
+plan tests => 25;
 
 # utf8
 
@@ -36,6 +36,13 @@ $text = encode('x-utf8-e4u-none-pp' => "\x{FE4BB}", FB_EMOJI_TEXT());
 is $text, '[教会]', 'church google';
 $text = encode('x-utf8-e4u-none-pp' => "\x{26EA}", FB_EMOJI_TEXT());
 is $text, '[教会]', 'church unicode';
+
+$text = encode('x-utf8-e4u-none-pp' => "\x{E5D8}", FB_EMOJI_TEXT());
+is $text, '[風呂]', 'church softbank3g';
+$text = encode('x-utf8-e4u-none-pp' => "\x{E13F}", FB_EMOJI_TEXT());
+is $text, '[風呂]', 'church google';
+$text = encode('x-utf8-e4u-none-pp' => "\x{1F6C0}", FB_EMOJI_TEXT());
+is $text, '[風呂]', 'church unicode';
 
 # sjis
 

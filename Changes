@@ -1,5 +1,15 @@
 ---
 
+Encode-JP-Emoji-0.60 (2010-10-24):
+  - News! Unicode 6.0 standard emoji supported.
+  - http://unicode.org/Public/UNIDATA/EmojiSources.txt
+  - Regexp property \p{InEmojiMixed} added in Propery.pm
+  - Note: a couple of Unicode 6.0 Standard emojis, U+1F532 and U+1F535, cannot make round-trip through x-utf8-e4u-unicode as Google maps them on the same code point U+FEB64.
+
+Encode-JP-Emoji-0.06 (2009-11-24):
+  - Encode.pm 2.38 does NOT "Use of uninitialized value in subroutine entry"
+  - Patched: #51204: Callback CHECK not supported for UTF-8 decoder/encoder
+
 Encode-JP-Emoji-0.05 (2009-07-06):
   - Mapping.pm missing some character names added.
   - Mapping.pm unused properties removed. Ex. \p{InEmojiDocomoCP932}.
