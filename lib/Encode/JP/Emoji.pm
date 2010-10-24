@@ -117,6 +117,10 @@ This module requires Perl version 5.8.1 or later.
 
 L<Unicode::Emoji::E4U> is not required on run time.
 
+=head1 UNICODE 6.0
+
+Unicode Version 6.0 is supported since Encode::JP::Emoji 0.60.
+
 =head1 LINKS
 
 =over 4
@@ -166,6 +170,6 @@ use strict;
 use warnings;
 use Encode::JP::Emoji::PP;
 
-our $VERSION = '0.60';
+our $VERSION = '0.61';
 
 1;
